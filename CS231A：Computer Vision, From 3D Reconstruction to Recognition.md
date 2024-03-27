@@ -4,6 +4,283 @@
 
 [TOC]
 
+
+
+## L2. Camera Models
+
+###  pinhole camera（小孔成像 - 摄像机）
+
+![image-20240326032639070](/home/aoijays/Desktop/note/CS231A：Computer Vision, From 3D Reconstruction to Recognition.assets/image-20240326032639070.png)
+
+- $f$：定义为相机焦距
+
+以O点（pinhole位置）建立坐标系，真实物体点$P(x,y,z)$投影到成像屏幕上$P'(x',y')$​，有如下关系（**相似三角形**）
+$$
+x' = \frac{f}{z}x,y' = \frac{f}{z}y
+$$
+物理课的小知识
+
+- 小孔越小，透光越少，但是画面清晰
+- 小孔越大，透光越多，但是画面模糊
+
+因此为了全部都要，引入了Lens（透镜）
+
+### Lenses and Cameras（透镜和相机）
+
+![image-20240326033557763](/home/aoijays/Desktop/note/CS231A：Computer Vision, From 3D Reconstruction to Recognition.assets/image-20240326033557763.png)
+
+- 除了通过中心的光线，其他光线都会被折射
+- 在一定距离，所有入射光线会被折射到图像的一点上
+- 少于或多于这段距离，光无法聚焦在一个点上（Out of focus）
+
+> 景深（Depth of Field）则是指在摄影或者摄像中，一张图像中能够保持清晰度的距离范围。
+
+![image-20240326034355319](/home/aoijays/Desktop/note/CS231A：Computer Vision, From 3D Reconstruction to Recognition.assets/image-20240326034355319.png)
+
+定义参数等效焦距$z'=f + z_0$，$z_0$​为像距
+
+则有：
+$$
+x' = \frac{z'}{z}x,y' = \frac{z'}{z}y
+$$
+但由于工艺问题，透镜成像的边缘经常发生distortion（畸变）
+
+![image-20240326034749500](/home/aoijays/Desktop/note/CS231A：Computer Vision, From 3D Reconstruction to Recognition.assets/image-20240326034749500.png)
+
+> 虚线为理想情况
+>
+> - 图1：聚焦偏外，越角落越边缘的图像越偏外
+> - 图2：聚焦偏内，越角落越边缘的图像越偏内
+
+### The Geometry of Pinhole Cameras（几何）
+
+>  只要距离足够，透镜和小孔成像都是同一个数学模型
+
+$$
+p=\begin{bmatrix}x\\y\\z\end{bmatrix} \to p'=\begin{bmatrix}x'\\y'\end{bmatrix}
+$$
+
+我们完成了三维世界到二维平面的投影
+
+#### Coordinate systems（坐标系）
+
+![image-20240326035659856](/home/aoijays/Desktop/note/CS231A：Computer Vision, From 3D Reconstruction to Recognition.assets/image-20240326035659856.png)
+
+- Off Set：$(x,y,z)\to(\frac{f}{z}x+c_x,\frac{f}{z}y+c_y)$​
+  - $(c_x,c_y)$的存在：相机由于工艺问题，无法保证焦点中心一定在图像中心，因此通过引入参数来进行矫正调整
+- From Metric to Pixels：$(x,y,z)\to(k\frac{f}{z}x+c_x,l\frac{f}{z}y+c_y)$​
+  - 我们更偏向乘上系数，使得长度单位变成像素（不同的系数解决了像素是长方形的情况）
+  - 所以$(c_x,c_y)$也是像素单位
+
+当$z$​发生变化时，投影坐标并不是线性变化（倒数），不利于使用线代处理
+
+同时乘上$z$，会丢失$z$的信息
+
+因此引入Homogeneous Coordinates（齐次坐标）
+
+#### Homogeneous Coordinates（齐次坐标）
+
+$$
+(x,y)\to \begin{bmatrix}x\\y\\1\end{bmatrix}
+$$
+
+我们对点坐标，额外增加一个新的维度（二维变三维，三维变四维）
+
+所以我们需要知道如何从齐次坐标转化回真实坐标
+$$
+\begin{bmatrix}x\\y\\w\end{bmatrix}\to (\frac{x}{w},\frac{y}{w})
+$$
+在后续计算中，补充的1可能会变化，我们需要让它变回1，代表了真实值
+$$
+(x,y,z)\to(k\frac{f}{z}x+c_x,l\frac{f}{z}y+c_y)\\
+(x,y,z)\to(\alpha\frac{x}{z}+c_x,\beta\frac{y}{z}+c_y)
+$$
+我们整理式子，先让变化只跟$(x,y,z)$有关，$\alpha,\beta$事实上就是相机确定后的两个定值系数
+$$
+\begin{bmatrix}
+\alpha & 0 & c_x & 0\\
+0 & \beta & c_y & 0 \\
+0 & 0 & 1 & 0
+\end{bmatrix}
+\begin{bmatrix}x\\y\\z\\1\end{bmatrix}=\begin{bmatrix}
+\alpha x+c_xz\\\beta y+c_y \\ z
+\end{bmatrix}
+$$
+我们通过变换矩阵$M$，把相机坐标系下的齐次坐标点$P_h$转化为了图像坐标系下的齐次坐标点$P'_h$，即：
+$$
+P_h'=MP_h
+$$
+$z$的信息就能得到很好的保存
+
+#### Camera Matrix K（相机内参）
+
+$M$内的参数被相机内部确定，只由相机的内部参数组成，内部参数一般称为$K$
+$$
+M = \begin{bmatrix}
+\alpha & 0 & c_x & 0\\
+0 & \beta & c_y & 0 \\
+0 & 0 & 1 & 0
+\end{bmatrix} = K\begin{bmatrix}I & 0\end{bmatrix}
+$$
+ 但由于工艺问题，有时像素平面可能不是一个矩形，而是一个平行四边形，产生了旋转
+
+![image-20240326155513409](/home/aoijays/Desktop/note/CS231A：Computer Vision, From 3D Reconstruction to Recognition.assets/image-20240326155513409.png)
+
+此时我们就需要考虑偏度（skewness）$\theta$的影响
+$$
+K=\begin{bmatrix}
+\alpha & -\alpha\cot\theta & c_x \\
+0 & \frac{\beta}{\sin\theta} & c_y  \\
+0 & 0 & 1 
+\end{bmatrix}
+$$
+
+> 懒得推导了
+
+- $\alpha,\beta,\theta,c_x,c_y$共五个自由度
+- 上三角矩阵
+
+#### World Reference System（世界坐标系）
+
+我们希望世界坐标系转化为相机坐标系，这里我们依旧使用齐次坐标
+
+ 我们先处理二维平面的情况
+
+- 平移Translation
+
+  - $$
+    P'\to\begin{bmatrix}x + t_x\\y + t_y\\1\end{bmatrix} = 
+    \begin{bmatrix}
+    1 & 0 & t_x\\
+    0 & 1 & t_y \\
+    0 & 0 & 1\\
+    \end{bmatrix} 
+    \begin{bmatrix}x \\y \\1\end{bmatrix}
+    $$
+
+- 缩放Scaling
+
+  - 注意是围绕原点进行缩放
+
+  - 当$s_x=s_y$时，称为**相似变换**
+
+  - $$
+    P'\to\begin{bmatrix}s_xx\\s_yy\\1\end{bmatrix} = 
+    \begin{bmatrix}
+    s_x & 0 & 0\\
+    0 & s_y & 0 \\
+    0 & 0 & 1\\
+    \end{bmatrix} 
+    \begin{bmatrix}x \\y \\1\end{bmatrix}
+    $$
+
+- 旋转Rotation
+
+  - $$
+    P'\to\begin{bmatrix}x'\\y'\\1\end{bmatrix} = 
+    \begin{bmatrix}
+    \cos\theta & -\sin\theta & 0\\
+    \sin\theta & \cos\theta & 0 \\
+    0 & 0 & 1\\
+    \end{bmatrix} 
+    \begin{bmatrix}x \\y \\1\end{bmatrix}
+    $$
+
+  - 同样是围绕原点进行旋转
+
+我们可以组合上述的矩阵：同时进行平移缩放旋转
+
+即对$P$先后进行变换矩阵的左乘即可
+
+
+
+对于三维情况：
+
+- 平移Translation
+
+  - $$
+    P'\to\begin{bmatrix}
+    I & T\\
+    0 & 1
+    \end{bmatrix} 
+    \begin{bmatrix}x \\y \\z \\1\end{bmatrix}
+    $$
+
+- 缩放Scaling
+
+  - $$
+    P'\to
+    \begin{bmatrix}
+    S & 0\\
+    0 & 1
+    \end{bmatrix} 
+    \begin{bmatrix}x \\y \\z\\1\end{bmatrix}
+    $$
+  
+- 旋转Rotation
+
+  - 绕x轴旋转$\alpha$，绕y轴旋转$\beta$，绕z轴旋转$\gamma$
+  
+  - $$
+    R_x(\alpha)=\begin{bmatrix}
+        1 &0&0\\
+       0 & \cos\alpha & -\sin\alpha \\
+       0 & \sin\alpha & \cos\alpha  \\
+    
+        \end{bmatrix} 
+      \\
+      R_y(\beta)=\begin{bmatrix}
+    
+       \cos\beta & 0 & -\sin\beta\\
+           0 &1&0\\
+       \sin\beta  & 0& \cos\beta  \\
+    
+        \end{bmatrix} 
+       \\
+       R_z(\gamma)=\begin{bmatrix}
+    
+       \cos\gamma& -\sin\gamma & 0 \\
+       \sin\gamma & \cos\gamma  & 0\\
+       0 &0&1\\
+    
+        \end{bmatrix}
+    $$
+    
+  - 任意绕轴旋转都可以进行分解成绕三轴先后旋转
+  
+  - $R = R_x(\alpha)R_y(\beta)R_z(\gamma)$，合成三个矩阵
+  
+  - $$
+    P'\to
+    \begin{bmatrix}
+    R & 0\\
+    0 & 1
+    \end{bmatrix} 
+    \begin{bmatrix}x \\y \\z\\1\end{bmatrix}
+    $$
+  
+- 
+
+在这里，我们一般不考虑缩放（刚体是不会缩放的）
+
+组合旋转和平移
+$$
+P' \to \begin{bmatrix}R & T \\ 0 & 1\end{bmatrix}
+$$
+即可完成旋转后，再平移
+
+![image-20240326193012179](/home/aoijays/Desktop/note/CS231A：Computer Vision, From 3D Reconstruction to Recognition.assets/image-20240326193012179.png)
+
+- 从世界坐标系，通过$R,T$转化到相机坐标系
+- 从相机坐标系通过投影，转化为图像坐标系
+
+推导从世界坐标系直接导入图像的公式：
+$$
+P'=K\begin{bmatrix}I & 0\end{bmatrix}P=K\begin{bmatrix}I & 0\end{bmatrix}\begin{bmatrix}R & T \\ 0 & 1\end{bmatrix}P_w\\
+P'=K\begin{bmatrix}R & T\end{bmatrix}P_w
+$$
+其中$\begin{bmatrix}R & T\end{bmatrix}$被称为外参数
+
 ## L8: Fitting and Matching
 
 ### Fitting
@@ -31,7 +308,6 @@
 
 -   直线模型：$y-mx-b = 0$
 -   找到$(m,b)$使得最小化误差$E = \sum(y_i-mx_i-b)^2$
-
 $$
 E &= \sum(y_i-\begin{bmatrix}
 x_i  & 1
@@ -50,7 +326,6 @@ m \\ b
 &= (Y-Xh)^T(Y-Xh) \\
 &= Y^TY-2(Xh)^TY+(Xh)^TXh
 $$
-
 对$h$求导
 $$
 \frac{dE}{dh} = -2X^TY+2X^TXh=0
@@ -277,7 +552,6 @@ g_x\ast I \\
 S_x & S_y
 \end{bmatrix}
 $$
-
 
 #### Corner/blob detectors
 
