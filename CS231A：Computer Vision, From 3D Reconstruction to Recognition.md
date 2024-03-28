@@ -10,7 +10,7 @@
 
 ###  pinhole camera（小孔成像 - 摄像机）
 
-![image-20240326032639070](/home/aoijays/Desktop/note/CS231A：Computer Vision, From 3D Reconstruction to Recognition.assets/image-20240326032639070.png)
+![image-20240326032639070](.//CS231A：Computer Vision, From 3D Reconstruction to Recognition.assets/image-20240326032639070.png)
 
 - $f$：定义为相机焦距
 
@@ -27,7 +27,7 @@ $$
 
 ### Lenses and Cameras（透镜和相机）
 
-![image-20240326033557763](/home/aoijays/Desktop/note/CS231A：Computer Vision, From 3D Reconstruction to Recognition.assets/image-20240326033557763.png)
+![image-20240326033557763](.//CS231A：Computer Vision, From 3D Reconstruction to Recognition.assets/image-20240326033557763.png)
 
 - 除了通过中心的光线，其他光线都会被折射
 - 在一定距离，所有入射光线会被折射到图像的一点上
@@ -35,7 +35,7 @@ $$
 
 > 景深（Depth of Field）则是指在摄影或者摄像中，一张图像中能够保持清晰度的距离范围。
 
-![image-20240326034355319](/home/aoijays/Desktop/note/CS231A：Computer Vision, From 3D Reconstruction to Recognition.assets/image-20240326034355319.png)
+![image-20240326034355319](.//CS231A：Computer Vision, From 3D Reconstruction to Recognition.assets/image-20240326034355319.png)
 
 定义参数等效焦距$z'=f + z_0$，$z_0$​为像距
 
@@ -45,7 +45,7 @@ x' = \frac{z'}{z}x,y' = \frac{z'}{z}y
 $$
 但由于工艺问题，透镜成像的边缘经常发生distortion（畸变）
 
-![image-20240326034749500](/home/aoijays/Desktop/note/CS231A：Computer Vision, From 3D Reconstruction to Recognition.assets/image-20240326034749500.png)
+![image-20240326034749500](.//CS231A：Computer Vision, From 3D Reconstruction to Recognition.assets/image-20240326034749500.png)
 
 > 虚线为理想情况
 >
@@ -64,7 +64,7 @@ $$
 
 #### Coordinate systems（坐标系）
 
-![image-20240326035659856](/home/aoijays/Desktop/note/CS231A：Computer Vision, From 3D Reconstruction to Recognition.assets/image-20240326035659856.png)
+![image-20240326035659856](.//CS231A：Computer Vision, From 3D Reconstruction to Recognition.assets/image-20240326035659856.png)
 
 - Off Set：$(x,y,z)\to(\frac{f}{z}x+c_x,\frac{f}{z}y+c_y)$​
   - $(c_x,c_y)$的存在：相机由于工艺问题，无法保证焦点中心一定在图像中心，因此通过引入参数来进行矫正调整
@@ -124,7 +124,7 @@ M = \begin{bmatrix}
 $$
  但由于工艺问题，有时像素平面可能不是一个矩形，而是一个平行四边形，产生了旋转
 
-![image-20240326155513409](/home/aoijays/Desktop/note/CS231A：Computer Vision, From 3D Reconstruction to Recognition.assets/image-20240326155513409.png)
+![image-20240326155513409](.//CS231A：Computer Vision, From 3D Reconstruction to Recognition.assets/image-20240326155513409.png)
 
 此时我们就需要考虑偏度（skewness）$\theta$的影响
 $$
@@ -269,7 +269,7 @@ P' \to \begin{bmatrix}R & T \\ 0 & 1\end{bmatrix}
 $$
 即可完成旋转后，再平移
 
-![image-20240326193012179](/home/aoijays/Desktop/note/CS231A：Computer Vision, From 3D Reconstruction to Recognition.assets/image-20240326193012179.png)
+![image-20240326193012179](./CS231A：Computer Vision, From 3D Reconstruction to Recognition.assets/image-20240326193012179.png)
 
 - 从世界坐标系，通过$R,T$转化到相机坐标系
 - 从相机坐标系通过投影，转化为图像坐标系
@@ -280,6 +280,18 @@ P'=K\begin{bmatrix}I & 0\end{bmatrix}P=K\begin{bmatrix}I & 0\end{bmatrix}\begin{
 P'=K\begin{bmatrix}R & T\end{bmatrix}P_w
 $$
 其中$\begin{bmatrix}R & T\end{bmatrix}$被称为外参数
+
+
+
+##### Weak Perspective Projection（弱透视投影）
+
+当物体离相机足够远时，深度$z$其实可以近似为一个常数$z_0$，从而简化计算
+
+![image-20240328195920736](./CS231A：Computer Vision, From 3D Reconstruction to Recognition.assets/image-20240328195920736.png)
+
+
+
+
 
 ## L8: Fitting and Matching
 
