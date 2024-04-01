@@ -130,3 +130,91 @@ cudaError_t cudaChooseDevice(int* device, const cudaDeviceProp* prop)
 cudaError_t cudaSetValidDevices(int *device_arr, int len);
 ```
 
+## Cuda项目建立
+
+建立项目文件夹，新建`CMakeLists.txt`
+
+```cmake
+cmake_minimum_required(VERSION 3.22)
+project(app LANGUAGES CUDA CXX)
+find_package(CUDA REQUIRED)
+CUDA_ADD_EXECUTABLE(app main.cu)
+TARGET_LINK_LIBRARIES(app)
+```
+
+在同文件夹下建立一个`main.cu`
+
+```cpp
+#include <stdio.h>
+#include <stdlib.h>
+#include <cuda_runtime_api.h>
+
+__global__ void add(int *a, int *b, int *c, int num) {
+	if ( threadIdx.x < num ) 
+		c[threadIdx.x] = a[threadIdx.x] + b[threadIdx.x];
+}
+
+int main(int argc, char ** argv) {
+	
+	int num = 10;
+	int a[num], b[num], c[num];
+	
+	for (int i=0;i<num;++i) a[i] = i;
+	for (int i=0;i<num;++i) b[i] = i * i;
+
+	int *agpu, *bgpu, *cgpu;
+	
+	cudaMalloc((void**)&agpu, num * sizeof(int));
+	cudaMalloc((void**)&bgpu, num * sizeof(int));
+	cudaMalloc((void**)&cgpu, num * sizeof(int));
+
+	cudaMemcpy(agpu, a, num * sizeof(int), cudaMemcpyHostToDevice);
+	cudaMemcpy(bgpu, b, num * sizeof(int), cudaMemcpyHostToDevice);
+
+	// 加法
+	add<<<1, 10>>>(agpu, bgpu, cgpu, num);
+	cudaMemcpy(c, cgpu, num * sizeof(int), cudaMemcpyDeviceToHost);
+	
+	printf("add:\n");
+	for (int i=0;i<num;++i) printf("%d + %d = %d\n", a[i], b[i], c[i]);
+
+	cudaFree(agpu); 
+	cudaFree(bgpu); 
+	cudaFree(cgpu); 
+    cudaDeviceReset(); 
+}
+```
+
+新建`build`文件夹
+
+```bash
+mkdir buid && cd build
+cmake ..
+make -j3
+./app
+```
+
+## 手写卷积
+
+什么是卷积？[【官方双语】那么……什么是卷积？](https://www.bilibili.com/video/BV1Vd4y1e7pj)
+
+ 首先需要添加一个新的东西：`CUDA_CHECK`
+
+```cpp
+#define CUDA_CHECK(call) \
+do { \
+    cudaError_t err = call; \
+    if (err != cudaSuccess) { \
+        fprintf(stderr, "CUDA error at %s:%d code=%d(%s) \"%s\"\n", \
+                __FILE__, __LINE__, err, cudaGetErrorString(err), #call); \
+        exit(EXIT_FAILURE); \
+    } \
+} while (0)
+
+// 后续我们使用Cuda函数时 用宏进行包装
+// 即可及时报错
+CUDA_CHECK(cudaMalloc(&devPtr, size));
+
+```
+
+code见`code/src/code_2.cu`

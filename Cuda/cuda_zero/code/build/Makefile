@@ -129,30 +129,6 @@ app/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/app.dir/build.make CMakeFiles/app.dir/build
 .PHONY : app/fast
 
-src/code_0.o: src/code_0.cu.o
-.PHONY : src/code_0.o
-
-# target to build an object file
-src/code_0.cu.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/app.dir/build.make CMakeFiles/app.dir/src/code_0.cu.o
-.PHONY : src/code_0.cu.o
-
-src/code_0.i: src/code_0.cu.i
-.PHONY : src/code_0.i
-
-# target to preprocess a source file
-src/code_0.cu.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/app.dir/build.make CMakeFiles/app.dir/src/code_0.cu.i
-.PHONY : src/code_0.cu.i
-
-src/code_0.s: src/code_0.cu.s
-.PHONY : src/code_0.s
-
-# target to generate assembly for a file
-src/code_0.cu.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/app.dir/build.make CMakeFiles/app.dir/src/code_0.cu.s
-.PHONY : src/code_0.cu.s
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -162,9 +138,6 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... app"
-	@echo "... src/code_0.o"
-	@echo "... src/code_0.i"
-	@echo "... src/code_0.s"
 .PHONY : help
 
 

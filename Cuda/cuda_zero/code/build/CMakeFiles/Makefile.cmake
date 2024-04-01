@@ -9,15 +9,34 @@ set(CMAKE_MAKEFILE_DEPENDS
   "CMakeCache.txt"
   "../CMakeLists.txt"
   "CMakeFiles/3.22.1/CMakeCUDACompiler.cmake"
+  "CMakeFiles/3.22.1/CMakeCXXCompiler.cmake"
   "CMakeFiles/3.22.1/CMakeSystem.cmake"
+  "CMakeFiles/app.dir/app_generated_main.cu.o.cmake.pre-gen"
+  "CMakeFiles/app.dir/app_generated_main.cu.o.depend"
   "/usr/share/cmake-3.22/Modules/CMakeCUDAInformation.cmake"
+  "/usr/share/cmake-3.22/Modules/CMakeCXXInformation.cmake"
   "/usr/share/cmake-3.22/Modules/CMakeCommonLanguageInclude.cmake"
   "/usr/share/cmake-3.22/Modules/CMakeGenericSystem.cmake"
   "/usr/share/cmake-3.22/Modules/CMakeInitializeConfigs.cmake"
+  "/usr/share/cmake-3.22/Modules/CMakeLanguageInformation.cmake"
   "/usr/share/cmake-3.22/Modules/CMakeSystemSpecificInformation.cmake"
   "/usr/share/cmake-3.22/Modules/CMakeSystemSpecificInitialize.cmake"
+  "/usr/share/cmake-3.22/Modules/CheckCXXSourceCompiles.cmake"
+  "/usr/share/cmake-3.22/Modules/CheckIncludeFileCXX.cmake"
+  "/usr/share/cmake-3.22/Modules/CheckLibraryExists.cmake"
   "/usr/share/cmake-3.22/Modules/Compiler/CMakeCommonCompilerMacros.cmake"
+  "/usr/share/cmake-3.22/Modules/Compiler/GNU-CXX.cmake"
+  "/usr/share/cmake-3.22/Modules/Compiler/GNU.cmake"
   "/usr/share/cmake-3.22/Modules/Compiler/NVIDIA-CUDA.cmake"
+  "/usr/share/cmake-3.22/Modules/FindCUDA.cmake"
+  "/usr/share/cmake-3.22/Modules/FindCUDA/run_nvcc.cmake"
+  "/usr/share/cmake-3.22/Modules/FindCUDA/select_compute_arch.cmake"
+  "/usr/share/cmake-3.22/Modules/FindPackageHandleStandardArgs.cmake"
+  "/usr/share/cmake-3.22/Modules/FindPackageMessage.cmake"
+  "/usr/share/cmake-3.22/Modules/FindThreads.cmake"
+  "/usr/share/cmake-3.22/Modules/Internal/CheckSourceCompiles.cmake"
+  "/usr/share/cmake-3.22/Modules/Platform/Linux-GNU-CXX.cmake"
+  "/usr/share/cmake-3.22/Modules/Platform/Linux-GNU.cmake"
   "/usr/share/cmake-3.22/Modules/Platform/Linux.cmake"
   "/usr/share/cmake-3.22/Modules/Platform/UnixPaths.cmake"
   )
@@ -30,6 +49,8 @@ set(CMAKE_MAKEFILE_OUTPUTS
 
 # Byproducts of CMake generate step:
 set(CMAKE_MAKEFILE_PRODUCTS
+  "CMakeFiles/app.dir/app_generated_main.cu.o.cmake.pre-gen"
+  "CMakeFiles/app.dir/app_generated_main.cu.o.cmake"
   "CMakeFiles/CMakeDirectoryInformation.cmake"
   )
 

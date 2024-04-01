@@ -8,7 +8,6 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/aoijays/Desktop/note/Cuda/cuda_zero/code/src/code_0.cu" "CMakeFiles/app.dir/src/code_0.cu.o" "gcc" "CMakeFiles/app.dir/src/code_0.cu.o.d"
   )
 
 # Targets to which this target links.
