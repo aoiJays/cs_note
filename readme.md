@@ -25,7 +25,7 @@ git merge origin/main
 - 4月
   - [MIT18.06 线性代数](https://www.bilibili.com/video/BV16Z4y1U7oU/)（在读10/35）
   - [吴恩达-机器学习数学基础-概率论](https://www.bilibili.com/video/BV1WH4y1q7o6)
-  - [Cuda基础编程](https://www.bilibili.com/video/BV17K411K76C/)（在读4/13）
+  - [Cuda基础编程](https://www.bilibili.com/video/BV17K411K76C/)（在读6/13）
   - [吴恩达-深度学习](https://www.bilibili.com/video/BV1FT4y1E74V)
 - 5月
   - 计组
