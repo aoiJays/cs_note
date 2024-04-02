@@ -1,6 +1,8 @@
 # cuda编程 · 零
 
 > [蒙特卡洛的树 - Cuda编程Bilibili](https://www.bilibili.com/video/BV17K411K76C/)
+>
+> [Github: Cuda_Learning](https://github.com/keefeWu/cuda_learning)
 
 [TOC]
 
@@ -218,3 +220,94 @@ CUDA_CHECK(cudaMalloc(&devPtr, size));
 ```
 
 code见`code/src/code_2.cu`
+
+
+
+## 并行归约Parallel Reduction
+
+> 我们需要对一个数组进行并行算法的求和
+
+### 交错寻址
+
+![image-20240402123917253](./cuda_zero.assets/image-20240402123917253.png)
+
+两两求和，逐渐合并
+
+但是这样寻址速度较慢
+
+### 连续地址
+
+![image-20240402124057146](/home/aoijays/Desktop/note/Cuda/cuda_zero/cuda_zero.assets/image-20240402124057146.png)
+
+code见`code/src/code_3.cu`
+
+## 程序计时
+
+推荐使用
+
+```cpp
+#include <sys/time.h>
+
+	struct timeval startTime, endTime;
+	
+	// 获取开始时间
+    gettimeofday(&startTime, NULL);
+
+    // 执行一些操作
+
+    // 获取结束时间
+    gettimeofday(&endTime, NULL);
+
+    // 计算时间差
+    long long elapsedTime = (endTime.tv_sec - startTime.tv_sec) * 1000000LL + (endTime.tv_usec - startTime.tv_usec);
+
+    printf("Elapsed time: %lld microseconds\n", elapsedTime);
+```
+
+其中，`sys/time.h` 是一个 C 标准库头文件，通常用于在 POSIX 操作系统中进行时间操作，因此在 POSIX 兼容的操作系统上使用时通常是可用的，比如 Linux 和 macOS 等。
+
+这里我们对手写卷积进行了测速
+
+code见`code/src/code_4.cu`
+
+并且我们发现，我们一个block一次计算，和一个thread一次计算
+
+效率基本一致
+
+并且放在thread可以共享内存，所以推荐放在thread里
+
+## 原子操作
+
+原子操作是一种**不可分割**的操作，它要么完全执行，要么完全不执行，没有中间状态。
+
+在并发编程中，原子操作是一种**确保多个线程或进程安全访问共享资源**的机制。
+
+原子操作能够保证在多线程环境下不会出现数据竞争的情况，从而确保数据的一致性和正确性。
+
+原子操作的特性包括：
+
+1. **不可分割性**：原子操作是一个不可分割的操作，它要么完全执行，要么完全不执行，不会被中断或分割成更小的部分。
+2. **独占性**：在原子操作执行期间，其他线程或进程无法访问被操作的资源，直到原子操作执行完成。
+3. **并发安全性**：多个线程或进程可以同时执行原子操作，而不会导致数据竞争或数据不一致的情况。
+
+> 银行转账，当钱被转出时若发生中断，则此时钱就少了
+>
+> 因此转出和转入必须完整执行完毕
+
+### 实例
+
+> 统计每种数字出现多少次
+
+如果在核函数中
+
+```cpp
+	hist[ a[id] ] ++;
+```
+
+由于会有多个核函数并行操作，每次hist的值都不一致
+
+会造成值操作的覆盖
+
+因此引入了`atomicAdd()`，自动为数据上锁，在完成一次加法之间，不允许被其他thread使用
+
+code见`code/src/code_5.cu`

@@ -125,6 +125,7 @@ SET(CUDA_NVCC_DEPEND
  "/usr/include/x86_64-linux-gnu/gnu/stubs.h"
  "/usr/include/x86_64-linux-gnu/sys/cdefs.h"
  "/usr/include/x86_64-linux-gnu/sys/select.h"
+ "/usr/include/x86_64-linux-gnu/sys/time.h"
  "/usr/include/x86_64-linux-gnu/sys/types.h"
  "/usr/lib/gcc/x86_64-linux-gnu/11/include/limits.h"
  "/usr/lib/gcc/x86_64-linux-gnu/11/include/stdarg.h"
