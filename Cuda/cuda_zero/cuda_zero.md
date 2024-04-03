@@ -311,3 +311,78 @@ code见`code/src/code_4.cu`
 因此引入了`atomicAdd()`，自动为数据上锁，在完成一次加法之间，不允许被其他thread使用
 
 code见`code/src/code_5.cu`
+
+
+
+## 共享内存
+
+使用`__shared__`进行声明
+
+同属于一个block的thread共享一个共享内存
+
+### 静态申请
+
+如果我们一开始就确定要开多少共享内存数组
+
+```cpp
+__shared__ int s[64];
+__shared__ int s[N]; // N is constexpr
+```
+
+### 动态申请
+
+在核函数指定第三个执行配置参数，数值为需要申请的**每个块**动态共享内存大小
+
+```cpp
+dynamicReverse<<<1, n, n*sizeof(int)>>>();
+```
+
+在核函数内
+
+```cpp
+extern __shared__ int s[]; // 此时s即为大小为指定值的数组
+```
+
+如果需要申请多个共享内存数组
+
+```cpp
+Kernel<<<g, b, nI*sizeof(int)+nF*sizeof(float)+nC*sizeof(char)>>>();
+```
+
+申请的数值即为所有数组大小之和
+
+```cpp
+extern __shared__ int s[];
+int *integerData = s;                        // nI ints
+float *floatData = (float*)&integerData[nI]; // nF floats
+char *charData = (char*)&floatData[nF];      // nC chars
+```
+
+手动切割数组即可
+
+
+
+## 框架thrust
+
+> cuda版本的STL
+
+官方地址：https://github.com/NVIDIA/thrust
+
+记录几个比较简单的例子
+
+```cpp
+#include <thrust/host_vector.h>
+#include <thrust/device_vector.h>
+
+	// 在主机内存中申请 大小为10的vector
+	thrust::host_vector<int > a(10);
+
+	for (auto & e : a) std::cin >> e;
+	for (auto & e : a) std::cout << e <<" ";
+
+	// 基本和std::vector没什么差别
+```
+
+## 实例：估算圆周率
+
+code见`code/src/code_6.cu`
