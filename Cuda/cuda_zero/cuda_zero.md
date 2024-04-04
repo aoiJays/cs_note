@@ -386,3 +386,50 @@ char *charData = (char*)&floatData[nF];      // nC chars
 ## 实例：估算圆周率
 
 code见`code/src/code_6.cu`
+
+## 多个block的归约
+
+例如我们要进行一个数组求和，但是数组元素个数远远多于线程
+
+一个block的线程数量有限，一般是1024（看具体设备）
+
+因此我们需要让多个block进行归约
+
+（估算圆周率的实例中，我们使用了1个block进行归约）
+
+- 把数据切分为若干段，每段数量为总线程数
+- 第一次先把所有数据读到前总线程数个数字内
+- 再细分成block num段，每段thread_num个
+- 分别归约，得到blockNum个数字
+- 数量不会很多的情况下直接CPU计算，节省硬件传输
+
+code见`code/src/code_7.cu`
+
+
+
+## 多维矩阵
+
+```cpp
+
+	size_t width = 120, height = 10;
+    float * a_gpu; size_t pitch;
+
+    cudaMallocPitch((void**)&a_gpu, &pitch, width*sizeof(float), height );
+
+    printf("real = %zu\npitch = %zu", width*sizeof(float), pitch);
+    cudaFree(a_gpu);
+
+// 当width*sizeof(float)<=512时 pitch=512
+// 超过512 pitch取最小的512的倍数
+```
+
+内存对齐，使得访问效率更高
+
+但是我们一行该放多少放多少，剩下的空间直接忽略
+
+暂时先不研究这个，感觉用处不大
+
+
+
+## 实例：手写全加器
+

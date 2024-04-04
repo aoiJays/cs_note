@@ -28,13 +28,13 @@ __global__ void sum(int * res, int n, int * cnt) {
 	// 每512个数字进行求和
 	
 	int id = threadIdx.x;
-	__shared__ int sData[512];
+	__shared__ int sData[1024];
 
 	for (int i=0;i<n;i+=blockDim.x) {
 		if ( id + i < n ) sData[id] = res[i + id];
 		__syncthreads();
-		for (int j=256;j;j>>=1) {
-			if ( id + j < 512 && id + i + j < n) sData[id] += sData[id + j];
+		for (int j=512;j;j>>=1) {
+			if ( id < j && id + i + j < n) sData[id] += sData[id + j];
 			__syncthreads();
 		}
 		if (id == 0) *cnt += sData[id];
@@ -45,7 +45,7 @@ __global__ void sum(int * res, int n, int * cnt) {
 #include <iostream>
 int main() {
 
-	int testCase = 100000000;
+	int testCase = 1000000;
 	srand(time(0));
 
 	float2 * points = new float2[testCase];
@@ -72,9 +72,6 @@ int main() {
 	CUDA_CHECK(cudaMemcpy(cnt, cnt_gpu, 1*sizeof(int), cudaMemcpyDeviceToHost));
 
 	printf("PI = %.10f", ((float)*cnt / testCase) * 4);
-
-
-
 
 
 	delete[] points; delete cnt;

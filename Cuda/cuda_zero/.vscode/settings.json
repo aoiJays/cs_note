@@ -1,7 +1,8 @@
 {
     "files.associations": {
         "new": "cpp",
-        "utility": "cpp"
+        "utility": "cpp",
+        "random": "cpp"
     },
     "cmake.configureOnOpen": false
 }
