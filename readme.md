@@ -23,8 +23,9 @@ git merge origin/main
 
 - 3月：完成了四月在读内容的一部分
 - 4月
-  - [MIT18.06 线性代数](https://www.bilibili.com/video/BV16Z4y1U7oU/)（在读10/35）
+  - <u>[MIT18.06 线性代数](https://www.bilibili.com/video/BV16Z4y1U7oU/)（在学11/35）</u>
   - [吴恩达-机器学习数学基础-概率论](https://www.bilibili.com/video/BV1WH4y1q7o6)
+  - [吴恩达-机器学习数学基础-微积分](https://www.bilibili.com/video/BV1Pg4y1X7Pa/)
   - **[Cuda基础编程](https://www.bilibili.com/video/BV17K411K76C/)（完成）**
   - [吴恩达-深度学习](https://www.bilibili.com/video/BV1FT4y1E74V)
 - 5月
