@@ -6,6 +6,12 @@
 
 #### 2024.4.5
 
-- [ ] MIT18.06 一节
-- [ ] [cuda新内容分配](https://space.bilibili.com/513006807/channel/seriesdetail?sid=3383022)
+- [x] MIT18.06 一节
+- [x] CudaZero结束
+- [x] 吴恩达-深度学习开坑
 
+#### 2024.4.6
+
+- [x] 吴恩达深度学习
+
+  

@@ -27,7 +27,7 @@ git merge origin/main
   - [吴恩达-机器学习数学基础-概率论](https://www.bilibili.com/video/BV1WH4y1q7o6)
   - [吴恩达-机器学习数学基础-微积分](https://www.bilibili.com/video/BV1Pg4y1X7Pa/)
   - **[Cuda基础编程](https://www.bilibili.com/video/BV17K411K76C/)（完成）**
-  - [吴恩达-深度学习](https://www.bilibili.com/video/BV1FT4y1E74V)
+  - [吴恩达-深度学习](https://www.bilibili.com/video/BV1FT4y1E74V)（在学16/183）
 - 5月
   - 计组
   - 深度学习实践
