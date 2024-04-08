@@ -14,6 +14,88 @@
 
 所有label值构成一个行向量$Y = \begin{bmatrix}  y^{(1)} & y^{(2)} & ... & y^{(m)}  \end{bmatrix}$
 
+
+
+#### 激活函数
+
+对于神经元来说，总是需要一个激活函数的
+
+每个神经元将所有输入进行线性组合后，需要喂入激活函数，输出一个值
+
+
+
+-   Sigmoid函数：
+
+> sigmoid函数：
+> $$
+> \sigma(z) = \frac{1}{1 + e^{-z}}
+> $$
+> 求导$y = \sigma(z)$：
+> $$
+> y = \frac{1}{1 + e^{-z}} \\
+> y' = \frac{e^{-z}}{(1+e^{-z})^2} = \frac{1+e^{-x}- 1}{1+e^{-x}} \times \frac{1}{1+e^{-x}}=(1-y)y
+> $$
+>
+
+![image-20240406170939098](./Andrew_Ng _DL.assets/image-20240406170939098.png)
+
+
+
+-   tanh函数
+
+>   基本已经不用sigmoid激活函数了，tanh函数在所有场合都优于sigmoid函数
+>
+>   除了二分类问题：需要输出0-1的概率值
+>
+>   tanh可以认为是sigmoid的平移伸缩版本
+>   $$
+>   tanh(z) = \frac{e^z-e^{-z}}{e^z+e^{-z}}
+>   $$
+>   求导：
+>   $$
+>   \frac{d}{dz}tanh(z) = \frac{(e^z+e^{-z})(e^z+e^{-z})-(e^z-e^{-z})(e^z-e^{-z})}{(e^z+e^{-z})^2} = 1 - \frac{(e^z-e^{-z})^2}{(e^z+e^{-z})^2} = 1-tanh^2(z)
+>   $$
+>   
+
+![image-20240408194918786](./Andrew_Ng _DL.assets/image-20240408194918786.png)
+
+
+
+-   Relu
+
+>   $$
+>   Relu(z) = max(0, z)
+>   $$
+>
+>   在0处导数不存在，但是全部取0的概率非常低
+
+![image-20240408195910390](./Andrew_Ng _DL.assets/image-20240408195910390.png)
+
+-   Leaky Relu
+
+$$
+Relu(x) = max(0.01x, x)
+$$
+
+![image-20240408200058217](./Andrew_Ng _DL.assets/image-20240408200058217.png)
+
+
+
+一般推荐使用Relu即可，训练速度快于前两者
+
+**sigmoid**和**tanh**函数的导数在正负饱和区的梯度都会接近于0，这会造成梯度弥散
+
+**Relu**进入负半区的时候，梯度为0，神经元此时不会训练，产生所谓的稀疏性，而**Leaky ReLu**不会有这问题
+
+但有足够的隐藏层使得z值大于0，所以对大多数的训练数据来说学习过程仍然可以很快
+
+>-   梯度弥散：反向传播中，导数连乘，若梯度很小（小于1），就会使得越远离输出层的梯度越小，越靠近输出层的梯度越大。靠近输入层的梯度趋近于0，基本不训练，无法学习输入层特征
+>-   梯度爆炸：导数很大，数值溢出
+
+
+
+
+
 #### 梯度下降
 
 懂的都懂
@@ -32,7 +114,7 @@ u = bc\\
 v = a+u\\
 J = 3v
 $$
-![image-20240406183120119](./Andrew_Ng _DL.md.assets/image-20240406183120119.png)
+![image-20240406183120119](./Andrew_Ng _DL.assets/image-20240406183120119.png)
 
 - $\frac{\partial J}{\partial v} = 3$
 - $\frac{\partial J}{\partial a} = \frac{\partial J}{\partial v}\times \frac{\partial v}{\partial a} = 3 \times 1 = 3$
@@ -56,18 +138,6 @@ $$
 - 参数：$w\in R^{n}, b \in R$
 - 输出：$\hat y = \sigma(w^Tx + b)$
 
-> sigmoid函数：
-> $$
-> \sigma(z) = \frac{1}{1 + e^{-z}}
-> $$
-> 求导$y = \sigma(z)$：
-> $$
-> y = \frac{1}{1 + e^{-z}} \\
-> y' = \frac{e^{-z}}{(1+e^{-z})^2} = \frac{1+e^{-x}- 1}{1+e^{-x}} \times \frac{1}{1+e^{-x}}=(1-y)y
-> $$
-> 
-
-![image-20240406170939098](./Andrew_Ng _DL.md.assets/image-20240406170939098.png)
 
 ##### Loss Function损失函数
 
@@ -189,7 +259,7 @@ $$
 
 每个样本之间都是不相干的，我们一个枚举，把所有单个样本的结果：$d_w,d_b$全部计算出来求和，最后除以$m$求平均即可
 
-![image-20240406232344610](./Andrew_Ng _DL.md.assets/image-20240406232344610.png)
+![image-20240406232344610](./Andrew_Ng _DL.assets/image-20240406232344610.png)
 
 但是对于深度学习问题，我们枚举计算非常低效
 
@@ -299,6 +369,8 @@ w:=w -\alpha dw\\
 b:=b -\alpha db
 $$
 
+
+
 ### 浅层神经网络
 
 ![image-20240408165222042](./Andrew_Ng _DL.assets/image-20240408165222042.png)
@@ -383,3 +455,4 @@ $$
 $$
 A^{[2]} = \sigma (W^{[1]} A^{[1]}   +b^{[1]})
 $$
+
