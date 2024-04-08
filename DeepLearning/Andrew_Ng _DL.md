@@ -77,15 +77,88 @@ $$
 
 Loss Function是对单个样本的计算
 
+>**为什么选择上述函数作为损失函数？**
+>
+>我们希望我们的模型输出$\hat y$：标签$y=1$的概率
+>
+>因此，标签$y=0$的概率即为：$1-\hat y$
+>
+>即为：
+>$$
+>P(y=1|x) = \hat y\\
+>P(y=0|x) = 1-\hat y
+>$$
+>当y=1时，我们期待$\hat y$尽可能大，接近1
+>
+>当y=0时，我们期待$1-\hat y$尽可能大，接近1
+>
+>
+>
+>我们希望统一这两个式子：
+>$$
+>P(y|x) = \hat y^y\times (1-\hat y)^{1-y}
+>$$
+>不符合的地方自动会变成1，不影响到结果
+>
+>**因此目标为：最大化这个函数**
+>
+>但这个函数比较抽象，不方便研究
+>
+>我们知道对数函数是一个**单调递增**的函数，因此我们对原式同时进行对数操作
+>$$
+>\log P(y|x)= \log( \hat y^y\times (1-\hat y)^{1-y})= y\log \hat y+(1-y)\log (1-\hat y)
+>$$
+>我们希望最大化$P(y|x)$，那么根据单调函数的性质，最大化$\log P(y|x)$即可
+>
+>我们需要最大化左边的值，就需要最大化右边
+>
+>我们加个负号
+>$$
+>L(\hat y, y) = -(y\log \hat y + (1-y)\log (1-\hat y))
+>$$
+>右边的表达式就是损失函数的负值
+>
+>我们最小化损失函数，与最大化概率值的目的一致
+>
+>因此作为损失函数非常不错
+
+
+
+
 ##### Cost Function成本函数 
 
 $$
-J(w, b) = \frac{1}{m}L(\hat y^{(i)},y^{(i)})
+J(w, b) = \frac{1}{m}\sum L(\hat y^{(i)},y^{(i)})
 $$
 
 针对总体成本的函数
 
 神经网络训练目标即为：找到最佳的参数，使得成本函数最小
+
+>   **为什么选择这个作为成本函数？**
+>
+>   ~~直觉上是这样~~
+>
+>   我们考虑从**最大似然估计**的角度出发
+>
+>   在参数$w,b$下，所有单个样本等于某个随机值$y_i$的概率就是：$\prod  P(y_i|x)$
+>
+>   构造似然函数：$L(w,b|y,x) = \prod  P(y_i|x)$
+>
+>   是一个关于$w,b$的函数，$y,x$均为定值
+>
+>   同样，我们希望两边求对数
+>   $$
+>   \log L =- \sum  L(\hat y, y)
+>   $$
+>   我们令成本函数：
+>   $$
+>   J(w, b) = -\frac{1}{m} \sum  L(\hat y, y)
+>   $$
+>   乘上一个$\frac{1}{m}$常数因子没什么影响，更加方便
+>
+>   最小化成本函数，即为最大化似然函数，则就是找到了最佳参数组合，使得样本和标签值已知的情况下，概率最大
+
 
 
 
@@ -107,8 +180,8 @@ $w$我们**暂时先不看作是一个矩阵向量**
 
 我们分别对$w_1,w_2, ...$即$w_j$进行求导
 $$
-dw_j = dz^{(i)}\times \frac{\partial z^{(i)}}{\partial w_j} = x^{(i)}_jdz^{(i)} =  x^{(i)}_j(\hat y^{(i)} - y^{(i)}) \\
-d_b = dz^{(i)}\times \frac{\partial z^{(i)}}{\partial b} = dz^{(i)} = \hat y^{(i)} - y^{(i)}
+dw_j^{(i)} = dz^{(i)}\times \frac{\partial z^{(i)}}{\partial w_j} = x^{(i)}_jdz^{(i)} =  x^{(i)}_j(\hat y^{(i)} - y^{(i)}) \\
+db^{(i)} = dz^{(i)}\times \frac{\partial z^{(i)}}{\partial b} = dz^{(i)} = \hat y^{(i)} - y^{(i)}
 $$
 现在我们考虑**多个样本**，即需要考虑的是成本函数$J$​
 
@@ -125,3 +198,103 @@ $$
 - 向量化
 - 小批量随机梯度下降
 
+ 
+
+##### Logistics Regression的梯度下降（向量化版本）
+
+>   避免显示的for循环
+>
+>   不管是CPU还是GPU，我们都更加推荐使用支持SIMD的函数
+>
+>   充分并行化操作，加快执行效率
+
+-   $v = [v_1, ..., v_n]^T$
+-   $e^v = [e^{v_1},...,e^{v_n}]^T$
+
+大部分函数操作，如`abs,log`等，都是会自动扩展成矩阵向量形式的
+
+---
+
+我们首先计算$z^{(i)}$，非向量版本就需要一个个枚举
+$$
+z^{(i)} = w^Tx^{(i)} + b
+$$
+我们可以放在一个矩阵中
+$$
+z =\begin{bmatrix}
+z^{(1)} & z^{(2)} & ... & z^{(m)} 
+\end{bmatrix}
+= 
+\begin{bmatrix}
+ w^Tx^{(1)} + b & w^Tx^{(2)} + b & ... &  w^Tx^{(m)} + b
+\end{bmatrix}
+=
+w^TX+b
+$$
+则有：
+$$
+\hat y =\begin{bmatrix}
+\hat y^{(1)} & \hat y^{(2)} & ... & \hat y^{(m)} 
+\end{bmatrix}
+=
+\begin{bmatrix}
+\sigma(z^{(1)}) & \sigma(z^{(2)}) & ... & \sigma(z^{(m)} )
+\end{bmatrix}
+=
+\sigma\begin{bmatrix}
+z^{(1)} & z^{(2)} & ... & z^{(m)} 
+\end{bmatrix}
+= \sigma(z)
+$$
+接下来我们计算梯度
+$$
+dz = \begin{bmatrix}
+dz^{(1)} & dz^{(2)} & ... & dz^{(m)} 
+\end{bmatrix}
+=
+\begin{bmatrix}
+\hat y^{(1)}- y^{(1)} & \hat y^{(2)}-y^{(2)} & ... & \hat y^{(m)}-y^{(m)} 
+\end{bmatrix}
+= \hat y - Y
+$$
+**这也就解释了为什么Y是行向量**
+
+>   列向量表示同一个样本的不同属性
+>
+>   行向量表示多个不同样本
+
+
+$$
+dw = \begin{bmatrix}
+dw_1\\
+dw_2\\
+...\\
+dw_n
+\end{bmatrix}
+=
+\frac{1}{m} \begin{bmatrix}
+\sum x_1^{(i)}dz^{(i)}  \\
+\sum x_2^{(i)}dz^{(i)}\\
+...\\
+\sum x_n^{(i)}dz^{(i)}
+\end{bmatrix}
+=
+\frac{1}{m} \begin{bmatrix}
+x_1dz^T  \\
+x_2dz^T \\
+...\\
+x_ndz^T 
+\end{bmatrix}
+=\frac{1}{m}Xdz^T
+$$
+得到的是一个$(n\times m)*(m\times 1) = (n\times 1)$的矩阵
+$$
+db = \frac{1}{m}\sum dz^{(i)}
+$$
+是一个标量
+
+最后，梯度下降即可以表示为：
+$$
+w:=w -\alpha dw\\
+b:=b -\alpha db
+$$

@@ -25,15 +25,16 @@ git merge origin/main
 - 4月
   - <u>[MIT18.06 线性代数](https://www.bilibili.com/video/BV16Z4y1U7oU/)（在学11/35）</u>
   - [吴恩达-机器学习数学基础-概率论](https://www.bilibili.com/video/BV1WH4y1q7o6)
-  - [吴恩达-机器学习数学基础-微积分](https://www.bilibili.com/video/BV1Pg4y1X7Pa/)
   - **[Cuda基础编程](https://www.bilibili.com/video/BV17K411K76C/)（完成）**
-  - [吴恩达-深度学习](https://www.bilibili.com/video/BV1FT4y1E74V)（在学16/183）
+  - [吴恩达-深度学习](https://www.bilibili.com/video/BV1FT4y1E74V)（在学24/183）
 - 5月
   - 计组
   - 深度学习实践
   - 计算机网络
+  - [MIT18.06 线性代数](https://www.bilibili.com/video/BV16Z4y1U7oU/)
 - 6月
   - 操作系统
+  - [吴恩达-机器学习数学基础-微积分](https://www.bilibili.com/video/BV1Pg4y1X7Pa/)
   - 机器学习（统计学习方法）
   - cs231n
 
