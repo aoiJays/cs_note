@@ -1,0 +1,11 @@
+CPU:
+Elapsed time: 2965865 microseconds
+
+GPU - naive:
+Elapsed time: 20221 microseconds
+
+GPU - block:
+Elapsed time: 13 microseconds
+
+249999.000000
+249755.000000
