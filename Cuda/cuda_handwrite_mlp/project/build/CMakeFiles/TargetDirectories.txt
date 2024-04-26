@@ -1,0 +1,3 @@
+/home/aoijays/ex/csexp/ex-final/project/build/CMakeFiles/app.dir
+/home/aoijays/ex/csexp/ex-final/project/build/CMakeFiles/edit_cache.dir
+/home/aoijays/ex/csexp/ex-final/project/build/CMakeFiles/rebuild_cache.dir

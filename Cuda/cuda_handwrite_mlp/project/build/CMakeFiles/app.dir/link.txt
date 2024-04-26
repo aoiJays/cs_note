@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/app.dir/src/main.cpp.o CMakeFiles/app.dir/src/matrix.cpp.o CMakeFiles/app.dir/src/mlp.cpp.o -o app 
