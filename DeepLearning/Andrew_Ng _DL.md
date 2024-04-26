@@ -493,7 +493,7 @@ $$
 
 **以下式子中，我们省略样本编号$(i)$​**
 
-例如：$A^{[3]} =  \begin{bmatrix}A^{[3]}_1 & A^{[3]}_2 \end{bmatrix}$，表示了单个样本的输出
+例如：$A^{[3]} =  \begin{bmatrix}A^{[3]}_1 \\ A^{[3]}_2 \end{bmatrix}$，表示了单个样本的输出
 
 
 
@@ -501,25 +501,23 @@ $$
 
   - $$
     dA^{[3]} = \frac{\partial L}{\partial A^{[3]}} = \begin{bmatrix}
-    A^{[3]}_1-y_1 & A^{[3]}_2-y_2 
+    A^{[3]}_1-y_1 \\ A^{[3]}_2-y_2 
     \end{bmatrix}
     $$
 
   - $$
     dZ^{[3]} &= \frac{\partial L}{\partial Z^{[3]}} = \frac{\partial L}{\partial A^{[3]}}\frac{\partial A^{[3]}}{\partial Z^{[3]}}\\
     &=\begin{bmatrix}
-    (A^{[3]}_1-y_1)\sigma'(Z^{[3]}_1) & (A^{[3]}_2-y_2)\sigma'(Z^{[3]}_2) )
+    (A^{[3]}_1-y_1)\sigma'(Z^{[3]}_1) \\ (A^{[3]}_2-y_2)\sigma'(Z^{[3]}_2) )
     \end{bmatrix}
     $$
 
   - $$
-    db^{[3]} = \frac{\partial L}{\partial Z^{[3]}} \frac{\partial Z^{[3]}}{\partial b^{[3]}} = \frac{\partial L}{\partial Z^{[3]}} \begin{bmatrix}
-    1 \\ 1
-    \end{bmatrix} = \begin{bmatrix}
+    db^{[3]} = \frac{\partial L}{\partial Z^{[3]}} \frac{\partial Z^{[3]}}{\partial b^{[3]}} = \begin{bmatrix}
     (A^{[3]}_1-y_1)\sigma'(Z^{[3]}_1)\\ (A^{[3]}_2-y_2)\sigma'(Z^{[3]}_2) )
-    \end{bmatrix}  = dZ^{[3]T}
+    \end{bmatrix}  = dZ^{[3]}
     $$
-
+    
   - $$
     dw^{[3]} &=\frac{\partial L}{\partial Z^{[3]}} \frac{\partial Z^{[3]}}{\partial w^{[3]}} \\
     &= \begin{bmatrix}
@@ -529,51 +527,52 @@ $$
     &=  \begin{bmatrix}
     (A^{[3]}_1-y_1)\sigma'(Z^{[3]}_1)\\ (A^{[3]}_2-y_2)\sigma'(Z^{[3]}_2) )
     \end{bmatrix} \begin{bmatrix}A_1^{[2]}  & A_2^{[2]}  & A_3^{[2]} \end{bmatrix} \\
-    &= db^{[3]}A^{[2]}
+    &= dZ^{[3]}A^{[2]T}
     $$
-
+  
 - 隐藏层2
 
   - $$
     dA^{[2]} &= \frac{\partial L}{\partial Z^{[3]}}\frac{\partial Z^{[3]}}{\partial A^{[2]}} \\
-    &=  \begin{bmatrix}dZ^{[3]}_1w^{[3]}_{1,1}+dZ^{[3]}_2w^{[3]}_{2,1} & dZ^{[3]}_1w^{[3]}_{1,2}+dZ^{[3]}_2w^{[3]}_{2,2} & dZ^{[3]}_1w^{[3]}_{1,3}+dZ^{[3]}_2w^{[3]}_{2,3} \end{bmatrix} \\
+    &=  \begin{bmatrix}dZ^{[3]}_1w^{[3]}_{1,1}+dZ^{[3]}_2w^{[3]}_{2,1} \\dZ^{[3]}_1w^{[3]}_{1,2}+dZ^{[3]}_2w^{[3]}_{2,2} \\dZ^{[3]}_1w^{[3]}_{1,3}+dZ^{[3]}_2w^{[3]}_{2,3} \end{bmatrix} \\
     &= \begin{bmatrix}
-    (A^{[3]}_1-y_1)\sigma'(Z^{[3]}_1) & (A^{[3]}_2-y_2)\sigma'(Z^{[3]}_2) )
+    w^{[3]}_{1,1} & w^{[3]}_{2,1} \\
+    w^{[3]}_{1,2} & w^{[3]}_{2,2} \\
+    w^{[3]}_{1,3} & w^{[3]}_{2,3} 
     \end{bmatrix} \begin{bmatrix}
-    w^{[3]}_{1,1} & w^{[3]}_{1,2} & w^{[3]}_{1,3} \\
-    w^{[3]}_{2,1} & w^{[3]}_{2,2} & w^{[3]}_{2,3} 
+    (A^{[3]}_1-y_1)\sigma'(Z^{[3]}_1) \\ (A^{[3]}_2-y_2)\sigma'(Z^{[3]}_2) )
     \end{bmatrix} \\
-    &= dZ^{[3]}w^{[3]}
+    &= w^{[3]T}dZ^{[3]}
     $$
-
+    
   - $$
-    dZ^{[2]} = \begin{bmatrix} dA^{[2]}_1 \sigma'(Z^{[2]}_1) & dA^{[2]}_2\sigma'(Z^{[2]}_2) & dA^{[2]}_3\sigma'(Z^{[2]}_3) \end{bmatrix}
+    dZ^{[2]} = \begin{bmatrix} dA^{[2]}_1 \sigma'(Z^{[2]}_1)\\ dA^{[2]}_2\sigma'(Z^{[2]}_2) \\ dA^{[2]}_3\sigma'(Z^{[2]}_3) \end{bmatrix}
     $$
-
+  
   - $$
-    db^{[2]} = \begin{bmatrix} dA^{[2]}_1 \sigma'(Z^{[2]}_1) \\dA^{[2]}_2\sigma'(Z^{[2]}_2) \\ dA^{[2]}_3\sigma'(Z^{[2]}_3) \end{bmatrix}= dZ^{[2]T}
+    db^{[2]} = \begin{bmatrix} dA^{[2]}_1 \sigma'(Z^{[2]}_1) \\dA^{[2]}_2\sigma'(Z^{[2]}_2) \\ dA^{[2]}_3\sigma'(Z^{[2]}_3) \end{bmatrix}= dZ^{[2]}
     $$
-
+  
   - $$
-    dw^{[2]} = db^{[2]}A^{[1]T}
+    dw^{[2]} = dZ^{[2]}A^{[1]T}
     $$
   
 - 隐藏层1（我们假装前面还有一个输入层$A_0$没画出来，多推几层看看规律）
 
   - $$
-    dA^{[1]} = dZ^{[2]}w^{[2]}
+    dA^{[1]} = w^{[2]T}dZ^{[2]}
     $$
 
   - $$
-    dZ^{[1]} = \begin{bmatrix} dA^{[1]}_1 \sigma'(Z^{[1]}_1) & dA^{[1]}_2\sigma'(Z^{[1]}_2)  \end{bmatrix}
+    dZ^{[1]} = \begin{bmatrix} dA^{[1]}_1 \sigma'(Z^{[1]}_1) \\ dA^{[1]}_2\sigma'(Z^{[1]}_2)  \end{bmatrix}
     $$
 
 - $$
-  db^{[1]} = dZ^{[1]T}
+  db^{[1]} = dZ^{[1]}
   $$
 
 - $$
-  dw^{[1]} = db^{[1]}A^{[0]}
+  dw^{[1]} = dZ^{[1]}A^{[0]T}
   $$
 
 - 
@@ -585,14 +584,14 @@ $$
 - 求出$dA^{[L]}$
 
   - 输出层需要通过损失函数求导得到
-  - 否则：$dA^{[L]} = dZ^{[L+1]}w^{[L+1]}$
+  - 否则：$dA^{[L]} = w^{[L+1]T}dZ^{[L+1]}$
 
 - 求出$dZ^{[L]}$
 
   - 我们引入阿达玛乘积：$C = A\circ B $，有：$C_{i,j} = A_{i,j}B_{i,j}$
   - $dZ^{[L]} = dA^{[L]} \circ \sigma'(Z^{[L]})$​
-- 求出$db^{[L]} = dZ^{[L]T}$
-- 求出$dw^{[L]} = db^{[L]}A^{[L-1]}$​
+- 求出$db^{[L]} = dZ^{[L]}$
+- 求出$dw^{[L]} = dZ^{[L]}A^{[L-1]T}$​
   - $L>0$，输入层的$A^{[L = 0]}$即为输入样本
 
 
@@ -607,25 +606,15 @@ $$
 例如：
 $$
 dA^{[3]} = \frac{\partial L}{\partial A^{[3]}} = \begin{bmatrix}
-A^{[3](1)}_1-y_1^{(1)} & A^{[3](1)}_2-y_2 ^{(1)}\\
-A^{[3](2)}_1-y_1^{(2)} & A^{[3](2)}_2-y_2 ^{(2)}\\
-... & ...\\
-A^{[3](n)}_1-y_1^{(n)} & A^{[3](n)}_2-y_2 ^{(n)}
+A^{[3](1)}_1-y_1^{(1)} & A^{[3](2)}_1-y_1^{(2)} & ... & A^{[3](n)}_1-y_1^{(n)} \\ 
+A^{[3](1)}_2-y_2^{(1)} & A^{[3](2)}_2-y_2^{(2)} & ... & A^{[3](n)}_2-y_2^{(n)}
 \end{bmatrix}
 $$
-其他按原表达式继续进行即可
+需要稍微修改$db$的求法
 
-整理一下：
+之前的算法中，我们省略了$db^{[3]} = \frac{\partial L}{\partial Z^{[3]}} \frac{\partial Z^{[3]}}{\partial b^{[3]}} $中的第二项，因为都是1
 
-- 求出$dA^{[L]}$
+后者应该为一个$m\times 1$的矩阵，且全为1
 
-  - 输出层需要通过损失函数求导得到
-  - 否则：$dA^{[L]} = dZ^{[L+1]}w^{[L+1]}$
-- 求出$dZ^{[L]}$
-
-  - 我们引入阿达玛乘积：$C = A\circ B $，有：$C_{i,j} = A_{i,j}B_{i,j}$
-  - $dZ^{[L]} = dA^{[L]} \circ \sigma'(Z^{[L]})$​
-- 求出$db^{[L]} = dZ^{[L]T}\begin{bmatrix}1\\1\\.\\1\end{bmatrix}_{}$，
-- 求出$dw^{[L]} = dZ^{[L]T}A^{[L-1]}$
-  - $L>0$，输入层的$A^{[L = 0]}$即为输入样本
+对于多个样本，我们这里没有必要引入矩阵计算，建议使用reduce-sum进行求解
 
