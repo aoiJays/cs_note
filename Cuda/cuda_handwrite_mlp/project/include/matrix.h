@@ -47,11 +47,18 @@ struct Matrix {
 	
 	void matrixFun(const Matrix & a, double (*fun)(double));
 
+	void matrixFun2(const Matrix & a, const Matrix & b, double (*fun)(double, double));
+
+
 	void matrixDot(const Matrix & a, const Matrix & b );
 
 	void matrixDot(double x);
 
 	void matrixTrans(const Matrix & a);
+
+	void matrixEqual(const Matrix & a);
+
+	void matrixSubmatrix(const Matrix & a, int l, int r);
 };
 
 

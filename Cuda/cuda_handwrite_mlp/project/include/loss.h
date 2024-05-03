@@ -1,28 +1,20 @@
 #ifndef _LOSS_H_
-#define _LOSS_H_
+#define _LOSS__H_
 
 #include <algorithm>
-#include <cmath>
-
 
 class Loss {
-    
-    virtual double cost(double yhat, double y) = 0;
-    virtual double dcost(double yhat, double y) = 0;
+
+    public:
+    	static double MSE(double y, double yhat) {
+    	    return (y-yhat)*(y-yhat) * 0.5;
+    	}
+	
+        static double dMSE(double y, double yhat) {
+    	    return yhat - y;
+    	}
+
 };
-
-class MSE: public Loss {
-
-    double cost(double yhat, double y) {
-        return (yhat-y) * (yhat - y) * 0.5;
-    }
-
-    double dcost(double yhat, double y) {
-        return (yhat - y);
-    }
-};
-
-
 
 
 #endif

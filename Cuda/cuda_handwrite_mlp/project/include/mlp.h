@@ -9,65 +9,52 @@
 
 #include "matrix.h"
 #include "activation.h"
-#include "loss.h"
-#include "optimizer.h"
 
 struct Layer {
 
     Matrix A, Z, AT, WT, W, b;
 	Matrix dA, dZ, dW, db, sigmadZ;
-    Activation* act;
     int nodeNum;
     
-    Layer(int lastNodeNum, int NodeNum, int batch_size, std::string activation_type);
+    typedef double (*ActivationFunction)(double);
+    ActivationFunction actFun, dactFun;
+
+    Layer(int lastNodeNum, int NodeNum, int batch_size, std::string Activation_type);
     Layer(int intputNodeNum, int batch_size);
 
-    ~Layer() {
-        if (act != NULL) delete act;
-    }
 };
 
 struct LossLayer {
 
-    Matrix A, Z, W, b;
-    Activation* act;
+    Matrix A, Z;
 
-    LossLayer(int lastNodeNum, int NodeNum, int batch_size, std::string activation_type);
+    typedef double (*ActivationFunction)(double);
+    ActivationFunction actFun, dactFun;
+
+    LossLayer(int lastNodeNum, int NodeNum, int batch_size, std::string Activation_type);
     LossLayer(int intputNodeNum, int batch_size);
 
-    ~LossLayer() {
-        if (act != NULL) delete act;
-    }
 };
 
 struct MLP {
     
-    std::vector<Layer> seq;
-    std::vector<LossLayer> seq_in_loss;
-    
-    Loss * loss;
-    Optimizer * optimizer;
-    
-    void setInputLayer(int intputNodeNum, int batch_size, int total_size);
-    void addLayer(int NodeNum, int batch_size, int total_size, std::string activation_type);
+    std::vector< std::unique_ptr<Layer> > seq;
+    std::vector< std::unique_ptr<LossLayer> > seq_in_loss;
 
-    void forward();
-    void backward();
+    typedef double (*LossFunction)(double, double);
+    LossFunction loss, dloss;
 
+    double lr; int batch_size, total_size;
 
-    MLP(std::string loss_function, std::string optimizer_type, double lr = 0.03 ) {
-        
-        if ( loss_function == "MSE" ) loss = new MSE;
-        else loss = new MSE;
+    void setInputLayer(int intputNodeNum);
+    void addLayer(int NodeNum,std::string Activation_type );
 
-        if ( optimizer_type == "SGD" ) optimizer = new SGD;
-        else optimizer = new SGD;
-    }
+    void forward(const Matrix & train, int l, int r);
+    void backward(const Matrix & train, int l, int r);
+    double getLoss(const Matrix & train, const Matrix & label);
 
-    ~MLP() {
-        if (loss!=NULL) delete loss;
-        if (optimizer!=NULL) delete optimizer;
-    }
+    MLP(double lr, int batch_size, int total_size, std::string loss_type);
+
 };
 
 #endif

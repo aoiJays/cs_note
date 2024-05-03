@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/aoijays/ex/csexp/ex-final/project
+CMAKE_SOURCE_DIR = /home/aoijays/Desktop/note/Cuda/cuda_handwrite_mlp/project
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/aoijays/ex/csexp/ex-final/project/build
+CMAKE_BINARY_DIR = /home/aoijays/Desktop/note/Cuda/cuda_handwrite_mlp/project/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/app.dir/depend.make
@@ -72,44 +72,44 @@ include CMakeFiles/app.dir/flags.make
 CMakeFiles/app.dir/src/main.cpp.o: CMakeFiles/app.dir/flags.make
 CMakeFiles/app.dir/src/main.cpp.o: ../src/main.cpp
 CMakeFiles/app.dir/src/main.cpp.o: CMakeFiles/app.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/aoijays/ex/csexp/ex-final/project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/app.dir/src/main.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/app.dir/src/main.cpp.o -MF CMakeFiles/app.dir/src/main.cpp.o.d -o CMakeFiles/app.dir/src/main.cpp.o -c /home/aoijays/ex/csexp/ex-final/project/src/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/aoijays/Desktop/note/Cuda/cuda_handwrite_mlp/project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/app.dir/src/main.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/app.dir/src/main.cpp.o -MF CMakeFiles/app.dir/src/main.cpp.o.d -o CMakeFiles/app.dir/src/main.cpp.o -c /home/aoijays/Desktop/note/Cuda/cuda_handwrite_mlp/project/src/main.cpp
 
 CMakeFiles/app.dir/src/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/app.dir/src/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/aoijays/ex/csexp/ex-final/project/src/main.cpp > CMakeFiles/app.dir/src/main.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/aoijays/Desktop/note/Cuda/cuda_handwrite_mlp/project/src/main.cpp > CMakeFiles/app.dir/src/main.cpp.i
 
 CMakeFiles/app.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/app.dir/src/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/aoijays/ex/csexp/ex-final/project/src/main.cpp -o CMakeFiles/app.dir/src/main.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/aoijays/Desktop/note/Cuda/cuda_handwrite_mlp/project/src/main.cpp -o CMakeFiles/app.dir/src/main.cpp.s
 
 CMakeFiles/app.dir/src/matrix.cpp.o: CMakeFiles/app.dir/flags.make
 CMakeFiles/app.dir/src/matrix.cpp.o: ../src/matrix.cpp
 CMakeFiles/app.dir/src/matrix.cpp.o: CMakeFiles/app.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/aoijays/ex/csexp/ex-final/project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/app.dir/src/matrix.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/app.dir/src/matrix.cpp.o -MF CMakeFiles/app.dir/src/matrix.cpp.o.d -o CMakeFiles/app.dir/src/matrix.cpp.o -c /home/aoijays/ex/csexp/ex-final/project/src/matrix.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/aoijays/Desktop/note/Cuda/cuda_handwrite_mlp/project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/app.dir/src/matrix.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/app.dir/src/matrix.cpp.o -MF CMakeFiles/app.dir/src/matrix.cpp.o.d -o CMakeFiles/app.dir/src/matrix.cpp.o -c /home/aoijays/Desktop/note/Cuda/cuda_handwrite_mlp/project/src/matrix.cpp
 
 CMakeFiles/app.dir/src/matrix.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/app.dir/src/matrix.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/aoijays/ex/csexp/ex-final/project/src/matrix.cpp > CMakeFiles/app.dir/src/matrix.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/aoijays/Desktop/note/Cuda/cuda_handwrite_mlp/project/src/matrix.cpp > CMakeFiles/app.dir/src/matrix.cpp.i
 
 CMakeFiles/app.dir/src/matrix.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/app.dir/src/matrix.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/aoijays/ex/csexp/ex-final/project/src/matrix.cpp -o CMakeFiles/app.dir/src/matrix.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/aoijays/Desktop/note/Cuda/cuda_handwrite_mlp/project/src/matrix.cpp -o CMakeFiles/app.dir/src/matrix.cpp.s
 
 CMakeFiles/app.dir/src/mlp.cpp.o: CMakeFiles/app.dir/flags.make
 CMakeFiles/app.dir/src/mlp.cpp.o: ../src/mlp.cpp
 CMakeFiles/app.dir/src/mlp.cpp.o: CMakeFiles/app.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/aoijays/ex/csexp/ex-final/project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/app.dir/src/mlp.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/app.dir/src/mlp.cpp.o -MF CMakeFiles/app.dir/src/mlp.cpp.o.d -o CMakeFiles/app.dir/src/mlp.cpp.o -c /home/aoijays/ex/csexp/ex-final/project/src/mlp.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/aoijays/Desktop/note/Cuda/cuda_handwrite_mlp/project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/app.dir/src/mlp.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/app.dir/src/mlp.cpp.o -MF CMakeFiles/app.dir/src/mlp.cpp.o.d -o CMakeFiles/app.dir/src/mlp.cpp.o -c /home/aoijays/Desktop/note/Cuda/cuda_handwrite_mlp/project/src/mlp.cpp
 
 CMakeFiles/app.dir/src/mlp.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/app.dir/src/mlp.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/aoijays/ex/csexp/ex-final/project/src/mlp.cpp > CMakeFiles/app.dir/src/mlp.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/aoijays/Desktop/note/Cuda/cuda_handwrite_mlp/project/src/mlp.cpp > CMakeFiles/app.dir/src/mlp.cpp.i
 
 CMakeFiles/app.dir/src/mlp.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/app.dir/src/mlp.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/aoijays/ex/csexp/ex-final/project/src/mlp.cpp -o CMakeFiles/app.dir/src/mlp.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/aoijays/Desktop/note/Cuda/cuda_handwrite_mlp/project/src/mlp.cpp -o CMakeFiles/app.dir/src/mlp.cpp.s
 
 # Object files for target app
 app_OBJECTS = \
@@ -125,7 +125,7 @@ app: CMakeFiles/app.dir/src/matrix.cpp.o
 app: CMakeFiles/app.dir/src/mlp.cpp.o
 app: CMakeFiles/app.dir/build.make
 app: CMakeFiles/app.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/aoijays/ex/csexp/ex-final/project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable app"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/aoijays/Desktop/note/Cuda/cuda_handwrite_mlp/project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable app"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/app.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -137,6 +137,6 @@ CMakeFiles/app.dir/clean:
 .PHONY : CMakeFiles/app.dir/clean
 
 CMakeFiles/app.dir/depend:
-	cd /home/aoijays/ex/csexp/ex-final/project/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/aoijays/ex/csexp/ex-final/project /home/aoijays/ex/csexp/ex-final/project /home/aoijays/ex/csexp/ex-final/project/build /home/aoijays/ex/csexp/ex-final/project/build /home/aoijays/ex/csexp/ex-final/project/build/CMakeFiles/app.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/aoijays/Desktop/note/Cuda/cuda_handwrite_mlp/project/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/aoijays/Desktop/note/Cuda/cuda_handwrite_mlp/project /home/aoijays/Desktop/note/Cuda/cuda_handwrite_mlp/project /home/aoijays/Desktop/note/Cuda/cuda_handwrite_mlp/project/build /home/aoijays/Desktop/note/Cuda/cuda_handwrite_mlp/project/build /home/aoijays/Desktop/note/Cuda/cuda_handwrite_mlp/project/build/CMakeFiles/app.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/app.dir/depend
 

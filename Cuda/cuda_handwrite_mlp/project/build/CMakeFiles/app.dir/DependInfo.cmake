@@ -8,9 +8,9 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/aoijays/ex/csexp/ex-final/project/src/main.cpp" "CMakeFiles/app.dir/src/main.cpp.o" "gcc" "CMakeFiles/app.dir/src/main.cpp.o.d"
-  "/home/aoijays/ex/csexp/ex-final/project/src/matrix.cpp" "CMakeFiles/app.dir/src/matrix.cpp.o" "gcc" "CMakeFiles/app.dir/src/matrix.cpp.o.d"
-  "/home/aoijays/ex/csexp/ex-final/project/src/mlp.cpp" "CMakeFiles/app.dir/src/mlp.cpp.o" "gcc" "CMakeFiles/app.dir/src/mlp.cpp.o.d"
+  "/home/aoijays/Desktop/note/Cuda/cuda_handwrite_mlp/project/src/main.cpp" "CMakeFiles/app.dir/src/main.cpp.o" "gcc" "CMakeFiles/app.dir/src/main.cpp.o.d"
+  "/home/aoijays/Desktop/note/Cuda/cuda_handwrite_mlp/project/src/matrix.cpp" "CMakeFiles/app.dir/src/matrix.cpp.o" "gcc" "CMakeFiles/app.dir/src/matrix.cpp.o.d"
+  "/home/aoijays/Desktop/note/Cuda/cuda_handwrite_mlp/project/src/mlp.cpp" "CMakeFiles/app.dir/src/mlp.cpp.o" "gcc" "CMakeFiles/app.dir/src/mlp.cpp.o.d"
   )
 
 # Targets to which this target links.

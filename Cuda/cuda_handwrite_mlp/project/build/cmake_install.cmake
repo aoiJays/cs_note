@@ -1,4 +1,4 @@
-# Install script for directory: /home/aoijays/ex/csexp/ex-final/project
+# Install script for directory: /home/aoijays/Desktop/note/Cuda/cuda_handwrite_mlp/project
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/aoijays/ex/csexp/ex-final/project/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/aoijays/Desktop/note/Cuda/cuda_handwrite_mlp/project/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

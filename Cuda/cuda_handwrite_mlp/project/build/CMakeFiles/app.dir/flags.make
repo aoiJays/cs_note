@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/aoijays/ex/csexp/ex-final/project/include
+CXX_INCLUDES = -I/home/aoijays/Desktop/note/Cuda/cuda_handwrite_mlp/project/include
 
-CXX_FLAGS = -std=gnu++17
+CXX_FLAGS =  -O3 -std=gnu++17
 

@@ -2,35 +2,26 @@
 #define _ACTIVATION_H_
 
 #include <algorithm>
-#include <cmath>
-
 
 class Activation {
-    
-    virtual double sigma(double x) = 0;
-    virtual double dsigma(double x) = 0;
-};
 
-class Linear: public Activation {
+    public:
+    	static double linear(double x) {
+    	    return x;
+    	}
+	
+    	static double dlinear(double x) {
+    	    return 1;
+    	}
+	
+    	static double Relu(double x) {
+    	    return std::max(x, 0.0);
+    	}
+	
+    	static double dRelu(double x) {
+    	    return x >=0 ? 1 : 0;
+    	}
 
-    double sigma(double x) {
-        return x;
-    }
-    double dsigma(double x) {
-        return 1;
-    }
-};
-
-
-
-class Relu: public Activation {
-
-    double sigma(double x) {
-        return std::max(x, 0.0);
-    }
-    double dsigma(double x) {
-        return x >=0 ? 1 : 0;
-    }
 };
 
 
