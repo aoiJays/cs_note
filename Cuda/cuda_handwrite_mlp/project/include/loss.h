@@ -3,17 +3,14 @@
 
 #include <algorithm>
 
+#include "matrix.h"
 class Loss {
 
     public:
-    	static double MSE(double y, double yhat) {
-    	    return (y-yhat)*(y-yhat) * 0.5;
-    	}
-	
-        static double dMSE(double y, double yhat) {
-    	    return yhat - y;
-    	}
-
+		static void MSE(Matrix & dst, Matrix & y, Matrix & yhat);
+		static void dMSE(Matrix & dst, Matrix & y, Matrix & yhat);
+		static void CrossEntropy(Matrix & dst, Matrix & y, Matrix & yhat);
+		static void dCrossEntropy_2_softmax(Matrix & dst, Matrix & y, Matrix & yhat);
 };
 
 

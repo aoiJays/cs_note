@@ -16,7 +16,7 @@ struct Layer {
 	Matrix dA, dZ, dW, db, sigmadZ;
     int nodeNum;
     
-    typedef double (*ActivationFunction)(double);
+    typedef void (*ActivationFunction)(Matrix & ,  Matrix &);
     ActivationFunction actFun, dactFun;
 
     Layer(int lastNodeNum, int NodeNum, int batch_size, std::string Activation_type);
@@ -28,7 +28,7 @@ struct LossLayer {
 
     Matrix A, Z;
 
-    typedef double (*ActivationFunction)(double);
+    typedef void (*ActivationFunction)(Matrix & ,  Matrix &);
     ActivationFunction actFun, dactFun;
 
     LossLayer(int lastNodeNum, int NodeNum, int batch_size, std::string Activation_type);
@@ -41,7 +41,7 @@ struct MLP {
     std::vector< std::unique_ptr<Layer> > seq;
     std::vector< std::unique_ptr<LossLayer> > seq_in_loss;
 
-    typedef double (*LossFunction)(double, double);
+    typedef void (*LossFunction)(Matrix & dst, Matrix & a, Matrix & b);
     LossFunction loss, dloss;
 
     double lr; int batch_size, total_size;
@@ -49,9 +49,10 @@ struct MLP {
     void setInputLayer(int intputNodeNum);
     void addLayer(int NodeNum,std::string Activation_type );
 
-    void forward(const Matrix & train, int l, int r);
-    void backward(const Matrix & train, int l, int r);
-    double getLoss(const Matrix & train, const Matrix & label);
+    void forward( Matrix & train, int l, int r);
+    double backward( Matrix & train, int l, int r);
+    double getLoss( Matrix & train,  Matrix & label);
+    double getAccuracy( Matrix & train,  Matrix & label);
 
     MLP(double lr, int batch_size, int total_size, std::string loss_type);
 

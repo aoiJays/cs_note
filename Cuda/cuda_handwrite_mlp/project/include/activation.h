@@ -2,25 +2,23 @@
 #define _ACTIVATION_H_
 
 #include <algorithm>
+#include "matrix.h"
 
 class Activation {
 
     public:
-    	static double linear(double x) {
-    	    return x;
-    	}
+
+    	static void linear(Matrix & a,  Matrix & b);
+
+    	static void dlinear(Matrix & a,  Matrix & b);
 	
-    	static double dlinear(double x) {
-    	    return 1;
-    	}
-	
-    	static double Relu(double x) {
-    	    return std::max(x, 0.0);
-    	}
-	
-    	static double dRelu(double x) {
-    	    return x >=0 ? 1 : 0;
-    	}
+    	static void ReLU(Matrix & a,  Matrix & b);
+
+    	static void dReLU(Matrix & a,  Matrix & b);
+
+    	static void softmax(Matrix & a,  Matrix & b);
+
+    	static void dsoftmax(Matrix & a,  Matrix & b);
 
 };
 

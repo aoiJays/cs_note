@@ -1,3 +1,0 @@
-/home/aoijays/Desktop/note/Cuda/cuda_handwrite_mlp/project/build/CMakeFiles/app.dir
-/home/aoijays/Desktop/note/Cuda/cuda_handwrite_mlp/project/build/CMakeFiles/edit_cache.dir
-/home/aoijays/Desktop/note/Cuda/cuda_handwrite_mlp/project/build/CMakeFiles/rebuild_cache.dir
