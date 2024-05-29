@@ -48,7 +48,7 @@ help( ... ) # 显示当前对象的说明
 
 ![image-20240529020547606](./Pytorch_小土堆.assets/image-20240529020547606.png)
 
-### 加载数据
+### Dataset
 
  以[蜜蜂蚂蚁数据集](https://www.kaggle.com/datasets/ajayrana/hymenoptera-data)进行说明
 
@@ -202,5 +202,123 @@ writer.add_image("test", img_array, 1, dataformats="HWC")
 
 可能用到的时候查一下就行
 
+适合对多个数据同时进行相同的处理
 
 
+
+### Torchvision数据集的下载与使用
+
+```python
+import torchvision
+train_set = torchvision.datasets.CIFAR10(root='../Dataset', train=True, download=True) # 训练集
+test_set = torchvision.datasets.CIFAR10(root='../Dataset', train=False, download=True) # 测试集
+
+print(train_set[0])
+print(train_set.classes)
+img, target = test_set[0]
+print(img, target)
+
+'''
+(<PIL.Image.Image image mode=RGB size=32x32 at 0x7202D3007670>, 6)
+['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']
+<PIL.Image.Image image mode=RGB size=32x32 at 0x7202D3007310> 3
+'''
+```
+
+此时我们得到的数据集都是`(PIL对象，标签索引)`
+
+我们可以使用Transform统一把图片转化为Tensor，方便Pytorch使用
+
+最简单的方法：
+
+```python
+dataset_transform = torchvision.transforms.Compose([ # 封装所有需要进行的转换列表
+    torchvision.transforms.ToTensor()
+])
+
+# 在加载数据时直接进行参数化修改
+train_set = torchvision.datasets.CIFAR10(root='../Dataset', train=True, transform=dataset_transform, download=True) # 训练集
+test_set = torchvision.datasets.CIFAR10(root='../Dataset', train=False, transform=dataset_transform, download=True) # 测试集
+
+```
+
+
+
+### DataLoader
+
+```python
+import torchvision
+from torch.utils.data import DataLoader
+
+test_set = torchvision.datasets.CIFAR10(root='../Dataset', train=False, transform=torchvision.transforms.ToTensor(), download=True) # 测试集
+
+# 除了官方数据集 也可以选择之前自己实例化的Dataset
+test_loader = DataLoader(dataset=test_set, batch_size=64, shuffle=True, drop_last=False)
+
+for data in test_loader: # 按batch_size数量进行遍历
+    imgs, targets = data
+    print(targets)
+```
+
+
+
+## 网络
+
+ 
+
+```python
+import torch
+from torch import nn
+
+# 需要从nn.Module进行继承
+class Mynn(nn.Module):
+    
+	def __init__(self):
+		super().__init__() # 调用父类的初始化函数
+   
+	def forward(self, input): # 前向传播
+		output = input + 1
+		return output
+        
+
+mynn = Mynn()
+x = torch.tensor(1.0)
+output = mynn(x)
+print(output)
+```
+
+ 
+
+### 卷积层
+
+对于一张H*W的RGB图片，其通道数channel为3
+
+我们使用多少个卷积核，就会产生多少个out_channels
+
+```python
+class Mycnn(nn.Module):
+    
+	def __init__(self):
+		super().__init__() 
+        # 输入3通道 用6个3*3的卷积核得到6通道输出 步长为1 不填充
+		self.conv1 = nn.Conv2d(in_channels=3, out_channels=6, kernel_size=3, stride=1, padding=0)
+
+	def forward(self, input): # 前向传播
+		output = self.conv1(input)
+		return output
+        
+mycnn = Mycnn()
+x = torch.FloatTensor([
+	[[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5]],
+	[[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5]],
+	[[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5]]
+])
+
+mycnn(x)
+```
+
+
+
+### 池化层
+
+ 
