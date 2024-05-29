@@ -186,3 +186,21 @@ writer.add_image("test", img_array, 1, dataformats="HWC")
 
 
 ![image-20240529031540127](./Pytorch_小土堆.assets/image-20240529031540127.png)
+
+
+
+### Transforms
+
+ 留个印象就好，能通过这个方法对数据、图片等进行互相转换、变化
+
+常见的有：
+
+- ToTensor：转化为Tensor数据
+- Normalize：归一化
+- Resize：对图片数据进行缩放
+- Compose：用列表记录多个变化，进行一次性操作
+
+可能用到的时候查一下就行
+
+
+
