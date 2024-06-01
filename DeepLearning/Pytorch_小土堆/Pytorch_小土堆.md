@@ -321,4 +321,135 @@ mycnn(x)
 
 ### 池化层
 
- 
+ 卷积后的图像依旧比较大，可以通过池化层进行压缩
+
+>   避免过拟合、去除冗余
+
+
+
+```python
+# 池化
+
+class Mycnn(nn.Module):
+    
+	def __init__(self):
+		super().__init__() 
+		# ceil_mode 若有无法整除kernel_size 多余的部分按照ceil_mode决定是否保留
+		self.maxpool1 = nn.MaxPool2d( kernel_size=3, ceil_mode=True)
+
+	def forward(self, input): # 前向传播
+		output = self.maxpool1(input)
+		return output
+        
+mycnn = Mycnn()
+x = torch.tensor([
+	[[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5]],
+	[[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5]],
+	[[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5]]
+], dtype = torch.float32)
+
+# x.shape
+mycnn(x)
+```
+
+
+
+我们可以喂入图片，就可以得到压缩画质版本的输出
+
+
+
+### 激活层
+
+```python
+# ReLU
+import torch
+from torch import nn
+
+class Mynn(nn.Module):
+    
+	def __init__(self):
+		super().__init__()
+		self.ReLU = nn.ReLU()
+	
+	def forward(self, input): # 前向传播
+		output = self.ReLU(input)
+		return output
+        
+mynn = Mynn()
+
+input = torch.tensor([
+	[1., -0.5],
+	[-1., 3]
+])
+
+input = torch.reshape(input, (-1, 1, 2, 2))
+
+print(input)
+output = mynn(input)
+print(output)
+```
+
+### 其他
+
+-   正则化层
+-   线性层……
+
+### Sequential
+
+我们试图构建一个较大的网络对CIFAR10数据集进行推理
+
+![image-20240530152550478](./Pytorch_小土堆.assets/image-20240530152550478.png)
+
+```python
+# Sequential
+import torch
+from torch import nn
+
+class Mynn(nn.Module):
+
+    def __init__(self):
+        super().__init__()
+        self.sequential = nn.Sequential(
+            nn.Conv2d(in_channels=3, out_channels=32, kernel_size=5, padding=2),
+            nn.MaxPool2d(2),
+            nn.Conv2d(in_channels=32, out_channels=32, kernel_size=5, padding=2),
+            nn.MaxPool2d(2),
+            nn.Conv2d(in_channels=32, out_channels=64, kernel_size=5, padding=2),
+            nn.MaxPool2d(2),
+            nn.Flatten(), # 将tensor张成一维张量
+            nn.Linear(1024, 64),
+            nn.Linear(64, 10)
+        )
+    
+    def forward(self, x):
+        x = self.sequential(x)
+        return x
+
+mynn = Mynn()
+print(mynn)
+
+# 模拟一个batch_size = 64中32*32的3通道数据集
+input = torch.ones( (64, 3, 32, 32) )
+output = mynn(input)
+print(output.shape)
+```
+
+## 损失函数
+
+```python
+import torch
+from torch.nn import *
+
+inputs = torch.tensor([1,2,3], dtype=torch.float32).reshape([-1,1,1,3])
+targets = torch.tensor([1,2,5], dtype=torch.float32).reshape([-1,1,1,3])
+
+loss1 = L1Loss(reduction='sum')
+loss2 = L1Loss(reduction='mean')
+
+print( loss1(inputs, targets) )
+print( loss2(inputs, targets) )
+
+loss3 = MSELoss()
+print( loss3(inputs, targets) )
+```
+
