@@ -451,5 +451,301 @@ print( loss2(inputs, targets) )
 
 loss3 = MSELoss()
 print( loss3(inputs, targets) )
+
+import torch
+import torch.nn as nn
+
+# 交叉熵损失函数
+# 假设 outputs 是模型的最后一层输出，shape 为 (batch_size, num_classes)，targets 是 ground truth labels
+outputs = torch.randn(10, 4)  # 对于4分类问题的10个样本的不归一化的预测值
+targets = torch.randint(0, 4, (10,))  # 对应的真实类别
+
+print(outputs)
+print(targets)
+
+loss_fn = nn.CrossEntropyLoss()
+loss = loss_fn(outputs, targets)
+print(loss.item())
+
+```
+
+
+
+## 反向传播
+
+```python
+# 构建网络
+import torch
+from torch import nn
+
+class Mynn(nn.Module):
+
+    def __init__(self):
+        super().__init__()
+        self.sequential = nn.Sequential(
+            nn.Conv2d(in_channels=3, out_channels=32, kernel_size=5, padding=2),
+            nn.MaxPool2d(2),
+            nn.Conv2d(in_channels=32, out_channels=32, kernel_size=5, padding=2),
+            nn.MaxPool2d(2),
+            nn.Conv2d(in_channels=32, out_channels=64, kernel_size=5, padding=2),
+            nn.MaxPool2d(2),
+            nn.Flatten(), # 将tensor张成一维张量
+            nn.Linear(1024, 64),
+            nn.Linear(64, 10)
+        )
+    
+    def forward(self, x):
+        x = self.sequential(x)
+        return x
+
+mynn = Mynn()
+print(mynn)
+
+# 模拟一个batch_size = 64中32*32的3通道数据集
+input = torch.ones( (64, 3, 32, 32) )
+output = mynn(input)
+print(output.shape)
+
+# -------------------------------------------
+# 构建数据集
+import torchvision
+from torch.utils.data import DataLoader
+
+test_set = torchvision.datasets.CIFAR10(root='../Dataset', train=False, transform=torchvision.transforms.ToTensor(), download=True) # 测试集
+
+test_loader = DataLoader(dataset=test_set, batch_size=64, shuffle=True, drop_last=False)
+
+# -------------------------------------------
+# 反向传播
+
+loss_fn = nn.CrossEntropyLoss()
+
+for data in test_loader: # 按batch_size数量进行遍历
+    imgs, targets = data
+    outputs = mynn(imgs)
+    
+    # 计算得到损失函数
+    loss = loss_fn(outputs, targets)
+    loss.backward() # 反向传播 沿计算图得到所有参数的梯度
+
+```
+
+
+
+## 优化器
+
+```python
+
+loss_fn = nn.CrossEntropyLoss()
+
+loss_sum = 0
+for data in test_loader: # 按batch_size数量进行遍历
+    
+    # 正向推理
+    imgs, targets = data
+    outputs = mynn(imgs)
+    
+    # 计算得到损失函数
+    loss = loss_fn(outputs, targets)
+
+    optim.zero_grad() # 将所有参数进行梯度清零
+    loss.backward() # 反向传播 沿计算图得到所有参数的梯度
+    optim.step() # 优化
+
+    loss_sum += loss
+
+print(loss_sum / len(test_loader))
+```
+
+我们可以进行多轮学习
+
+```python
+
+loss_fn = nn.CrossEntropyLoss()
+
+epochs = 20
+
+for epoch in range(epochs):
+    loss_sum = 0
+    for data in test_loader: # 按batch_size数量进行遍历
+
+        # 正向推理
+        imgs, targets = data
+        outputs = mynn(imgs)
+
+        # 计算得到损失函数
+        loss = loss_fn(outputs, targets)
+
+        optim.zero_grad() # 将所有参数进行梯度清零
+        loss.backward() # 反向传播 沿计算图得到所有参数的梯度
+        optim.step() # 优化
+
+        loss_sum += loss
+
+    print('step', epoch, ' = ', loss_sum / len(test_loader))
+```
+
+当loss收敛后，就完成了训练
+
+
+
+## 模型的修改
+
+ 除了自己的模型，其实也能修改别人训练完的模型
+
+以此网络为例：
+
+```python
+import torch
+from torch import nn
+
+class Mynn(nn.Module):
+
+    def __init__(self):
+        super().__init__()
+        self.sequential1 = nn.Sequential(
+            nn.Conv2d(in_channels=3, out_channels=32, kernel_size=5, padding=2),
+            nn.MaxPool2d(2),
+            nn.Conv2d(in_channels=32, out_channels=32, kernel_size=5, padding=2),
+            nn.MaxPool2d(2),
+            nn.Conv2d(in_channels=32, out_channels=64, kernel_size=5, padding=2),
+            nn.MaxPool2d(2),
+            nn.Flatten(), # 将tensor张成一维张量
+            nn.Linear(1024, 64),
+            nn.Linear(64, 10)
+        )
+        self.sequential2 = nn.Linear(10,10)
+        self.classfication = nn.Sequential(
+            nn.Linear(10,10),
+            nn.Linear(10,10),
+            nn.Linear(10,10)
+        )
+
+
+mynn = Mynn()
+print(mynn)
+
+```
+
+网络结构为：
+
+```python
+Mynn(
+  (sequential1): Sequential(
+    (0): Conv2d(3, 32, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2))
+    (1): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+    (2): Conv2d(32, 32, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2))
+    (3): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+    (4): Conv2d(32, 64, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2))
+    (5): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+    (6): Flatten(start_dim=1, end_dim=-1)
+    (7): Linear(in_features=1024, out_features=64, bias=True)
+    (8): Linear(in_features=64, out_features=10, bias=True)
+  )
+  (sequential2): Linear(in_features=10, out_features=10, bias=True)
+  (classfication): Sequential(
+    (0): Linear(in_features=10, out_features=10, bias=True)
+    (1): Linear(in_features=10, out_features=10, bias=True)
+    (2): Linear(in_features=10, out_features=10, bias=True)
+  )
+)
+```
+
+
+
+### 添加
+
+```python
+mynn.add_module('add_ReLU', nn.ReLU() )
+print(mynn)
+
+'''
+Mynn(
+  (sequential1): Sequential(
+    (0): Conv2d(3, 32, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2))
+    (1): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+    (2): Conv2d(32, 32, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2))
+    (3): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+    (4): Conv2d(32, 64, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2))
+    (5): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+    (6): Flatten(start_dim=1, end_dim=-1)
+    (7): Linear(in_features=1024, out_features=64, bias=True)
+    (8): Linear(in_features=64, out_features=10, bias=True)
+  )
+  (sequential2): Linear(in_features=10, out_features=10, bias=True)
+  (classficatipm): Sequential(
+    (0): Linear(in_features=10, out_features=10, bias=True)
+    (1): Linear(in_features=10, out_features=10, bias=True)
+    (2): Linear(in_features=10, out_features=10, bias=True)
+  )
+  (add_ReLU): ReLU()
+)
+'''
+```
+
+### 修改
+
+```python
+mynn.classfication[1] = nn.ReLU()
+print(mynn)
+
+'''
+Mynn(
+  (sequential1): Sequential(
+    (0): Conv2d(3, 32, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2))
+    (1): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+    (2): Conv2d(32, 32, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2))
+    (3): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+    (4): Conv2d(32, 64, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2))
+    (5): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+    (6): Flatten(start_dim=1, end_dim=-1)
+    (7): Linear(in_features=1024, out_features=64, bias=True)
+    (8): Linear(in_features=64, out_features=10, bias=True)
+  )
+  (sequential2): Linear(in_features=10, out_features=10, bias=True)
+  (classfication): Sequential(
+    (0): Linear(in_features=10, out_features=10, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=10, out_features=10, bias=True)
+  )
+  (add_ReLU): ReLU()
+)
+'''
+```
+
+
+
+## 模型的保存与读取
+
+
+
+### save
+
+```python
+import torch
+
+
+torch.save(model, 'new_model.pth')
+model = torch.load('my_model.pth')
+```
+
+完整保存了模型的结构与参数，数据量大
+
+
+
+### state_dict（官方推荐）
+
+```python
+import torch
+model = MyModel() # 需要保证与读取的模型是同一个类
+
+# 以字典形式进行 更加方便
+torch.save(model.state_dict(), 'model_state_dict1.pth')
+
+state_dict = torch.load('model_state_dict.pth')
+model.load_state_dict(state_dict)
+
+
+
 ```
 
