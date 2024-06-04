@@ -749,3 +749,155 @@ model.load_state_dict(state_dict)
 
 ```
 
+## GPU训练
+
+- 损失函数
+- 数据
+- 模型
+
+三种对象直接`x = x.cuda()`即可放入GPU显存
+
+但是若GPU不存在，此时代码兼容性一般
+
+```python
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+x = x.to(device)
+```
+
+更推荐这种写法
+
+
+
+## 完整流程
+
+```python
+import torchvision
+from torch.utils.data import DataLoader
+
+# 导入数据
+train_set = torchvision.datasets.CIFAR10(root='../Dataset', train=True, transform=torchvision.transforms.ToTensor(), download=True) # 训练集
+test_set = torchvision.datasets.CIFAR10(root='../Dataset', train=False, transform=torchvision.transforms.ToTensor(), download=True) # 测试集
+
+train_data_size = len(train_set)
+test_data_size = len(test_set)
+
+print(train_data_size, test_data_size)
+
+# 生成DataLoader
+train_loader = DataLoader(dataset=train_set, batch_size=64, shuffle=True, drop_last=False)
+test_loader = DataLoader(dataset=test_set, batch_size=64, shuffle=False, drop_last=False)
+```
+
+
+
+构建网络
+
+```python
+from torch import nn
+
+class Mynn(nn.Module):
+
+    def __init__(self):
+        super().__init__()
+        self.sequential = nn.Sequential(
+            nn.Conv2d(in_channels=3, out_channels=32, kernel_size=5, padding=2),
+            nn.MaxPool2d(2),
+            nn.Conv2d(in_channels=32, out_channels=32, kernel_size=5, padding=2),
+            nn.MaxPool2d(2),
+            nn.Conv2d(in_channels=32, out_channels=64, kernel_size=5, padding=2),
+            nn.MaxPool2d(2),
+            nn.Flatten(), # 将tensor张成一维张量
+            nn.Linear(1024, 64),
+            nn.Linear(64, 10)
+        )
+    
+    def forward(self, x):
+        x = self.sequential(x)
+        return x
+```
+
+
+
+初始化
+
+```python
+from torch import optim
+
+mynn = Mynn().to(device)
+loss_fn = nn.CrossEntropyLoss().to(device)
+optim = optim.SGD(mynn.parameters(), lr = 1e-2)
+```
+
+
+
+训练
+
+```python
+from torch.utils.tensorboard import SummaryWriter
+writer = SummaryWriter("logs") # 创建对象 在logs文件夹下保存文件
+
+
+epochs = 40
+
+
+for i in range(epochs):
+	
+	print('-----------第{}轮训练-------------'.format(i + 1))
+	
+	train_size = 0	
+	train_step = 0
+
+	for imgs, targets in train_loader:
+		
+		imgs = imgs.to(device)
+		targets = targets.to(device)
+
+		# 正向推理
+		outputs = mynn(imgs)
+		loss = loss_fn(outputs, targets)
+		
+		# 优化
+		optim.zero_grad()
+		loss.backward()
+		optim.step()
+
+
+		# 观察损失函数	
+		train_size += len(imgs)
+		train_step += 1
+
+		writer.add_scalar("Train Loss", loss.item(), train_step)
+		if train_step % 250 == 0:
+			print('{}/{} Loss = {}'.format(train_size, train_data_size, loss.item()))
+
+	
+	# 测试
+	total_loss = 0
+
+	# 上下文管理器：
+	# with 语句是一个上下文管理器，确保在其内部的代码块在启用了 torch.no_grad() 模式下执行。
+	# 一旦代码块执行完毕，上下文管理器会恢复之前的状态，如果之前启用了梯度计算，则重新启用。
+
+	# torch.no_grad() 纯推理 不需要记录梯度 节省时间
+	with torch.no_grad():
+		for imgs, targets in test_loader:
+
+			imgs = imgs.to(device)
+			targets = targets.to(device)
+			
+			outputs = mynn(imgs)
+			loss = loss_fn(outputs, targets)
+			total_loss += loss.item()
+
+		writer.add_scalar("Test Loss", total_loss/test_data_size, i)
+		print('测试集Loss = {}'.format(total_loss/test_data_size))
+
+
+	if (i + 1) % 10 == 0:
+		torch.save(mynn, './model/train_model{}.pth'.format(i))
+	
+writer.close()	 
+
+```
+
+​	
