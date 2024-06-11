@@ -142,6 +142,30 @@ $$
 
 -   随机试验各种结果的实值单值函数
 
+
+
+### 分布函数
+
+设随机变量$X$，$x$是任意实数：
+$$
+F(x) = P(X\leq x), x \in R
+$$
+称为$X$的分布函数
+
+- $x \in R$
+- $0 \leq F(x) \leq 1$
+- $P(x_1 < X \leq x_2) = F(x_2) - F(x_1)$，左开右闭
+
+
+
+- 单调不减
+- $\lim _{x\to -\infty} F(x) = 0, \lim_{x\to +\infty}F(x) = 1$
+- 右连续
+
+
+
+
+
 ### 离散型随机变量
 
 有限、可列举的
@@ -178,7 +202,7 @@ $$
 $$
 P(X=k) = C_{n}^kp^k(1-k)^{n-k}
 $$
- 
+
 
 #### 泊松分布
 
@@ -190,3 +214,69 @@ $$
 $$
 X \sim P(\lambda)
 $$
+
+> 由二项分布：
+> $$
+> P(X=k) = C_{n}^kp^k(1-k)^{n-k} = \frac{n!}{k!(n-k)!}p^k(1-p)^{n-k}
+> $$
+> 我们令$np = \lambda$
+> $$
+> P =  \frac{n!}{k!(n-k)!}(\frac{\lambda}{n})^k(1-\frac{\lambda}{n})^{n-k} = \frac{n(n-1)...(n-k+1)}{k!}(\frac{\lambda}{n})^k(1-\frac{\lambda}{n})^{n-k}
+> $$
+> 提出$\frac{\lambda^k}{k!}$
+> $$
+> P =\frac{\lambda^k}{k!}*[1\times (1-\frac{1}{n})\times ...\times (1-\frac{k-1}{n})](1-\frac{\lambda}{n})^{n}(1-\frac{\lambda}{n})^{-k}
+> $$
+> 当$n$趋近于正无穷时
+> $$
+> 1\times (1-\frac{1}{n})\times ...\times (1-\frac{k-1}{n})] \to 1 \\
+> (1-\frac{\lambda}{n})^{n} \to e^{-\lambda} \\
+> (1-\frac{\lambda}{n})^{-k} \to 1 \\
+> $$
+> 因此：
+> $$
+> P = \frac{\lambda^ke^{-\lambda }}{k!}
+> $$
+> 
+
+- $n$趋近无穷时，二项分布即为$\lambda = np$​的泊松分布
+- $n >> p$时可以用泊松分布近似
+
+
+
+#### 几何分布
+
+> （和几何没有什么关系）
+
+- 试验次数未知
+- 独立重复试验，直到成功一次
+
+$$
+P(X=k) = (1-p)^{k-1}p
+$$
+
+$k$为试验次数。此时称服从参数为$p$的几何分布
+
+
+
+#### 超几何分布
+
+- N个物体中，M个次品。
+- 任取n次所得到的次品数
+
+$$
+P(X=k) = \frac{C_{M}^kC_{N-M}^{n-k}}{C_N^n}
+$$
+
+### 
+
+### 连续型随机变量
+
+对于$X$的分布函数$F(x)$，存在非负、可积函数$f(x)$：
+$$
+F(x) = \int_{-\infty}^xf(t)dt
+$$
+则称$X$为连续型随机变量
+
+$f(x)$为其概率密度函数
+
