@@ -280,3 +280,172 @@ $$
 
 $f(x)$为其概率密度函数
 
+
+
+#### 均匀分布
+
+若$X$的概率密度函数：
+$$
+f(x) = \frac{1}{b-a}, x \in (a,b)
+$$
+则$X$在$(a,b)$上服从均匀分布
+$$
+X\sim U(a,b)
+$$
+则其分布函数：
+$$
+F(x) = \frac{x-a}{b-a}, x \in (a,b)
+$$
+![image-20240612155818669](./Probability-and-Statistics.assets/image-20240612155818669.png)
+
+此时，$X$若在区间内任意一个**子区间**的概率，取决于子区间的长度
+
+
+
+#### 正态分布（高斯分布）
+
+若$X$的概率密度函数：
+$$
+f(x) = \frac{1}{\sqrt{2\pi} \sigma}e^{-\frac{(x-\mu)^2}{2\sigma^2}}
+$$
+则：
+$$
+X \sim N(\mu, \sigma^2)
+$$
+![image-20240612160653559](Probability-and-Statistics.assets/image-20240612160653559.png)
+
+- 对称性：$x=\mu$
+- 最大值：$f_{max}(x) = \frac{1}{\sqrt{2\pi} \sigma}$
+- 渐近线：$y = 0$
+
+
+
+![image-20240612160817511](Probability-and-Statistics.assets/image-20240612160817511.png)
+
+- 方差越大，越扩散
+
+
+
+当$\mu = 0, \sigma^2 = 1$时，服从**标准正态分布**
+$$
+X  \sim N(0, 1)
+$$
+此时概率密度函数
+$$
+\varphi(x) = \frac{1}{\sqrt{2\pi}}e^{-\frac{x^2}{2}}
+$$
+分布函数$\phi(x)$
+
+>- $\phi(x) = 1 - \phi(-x)$
+>- $\phi(x) = \phi(-x)$
+>- $\phi(0) = \frac{1}{2}$ ，即$P(X\leq 0) = \frac{1}{2}$ 
+
+
+
+任意正态分布都可以转化为标准正态分布：
+
+若$X\sim N(\mu, \sigma^2)$，则随机变量$Y = \frac{X-\mu}{\sigma} \sim N(0, 1)$
+
+
+
+则我们求解$F(x)$：
+$$
+F(x) = P(X\leq x) = P(\frac{X-\mu}{\sigma} \leq \frac{x-\mu}{\sigma}) = \phi(\frac{x-\mu}{\sigma})
+$$
+
+
+#### 指数分布
+
+$$
+f(x) = \frac{1}{\theta}e^{-\frac{x}{\theta}}, x>0
+$$
+
+其中$\theta>0$为常数，此时$X$服从参数为$\theta$的指数分布
+$$
+F(x) = 1 - e^{-\frac{x}{\theta}}, x>0
+$$
+
+- 无记忆性：$P(X>s)$时，$P(X>s+t|X>s) = P(X>s+t)$ 
+
+> 条件概率公式算一下即可，可以被消掉
+
+### 随机变量的函数
+
+若$X$是随机变量，存在函数$Y = g(X)$，则其随机变量$X$的函数。此时$Y$也是随机变量
+
+- 离散型求法：逐值代入即可
+- 连续型求法
+  - 分布函数求导
+  - 公式
+
+#### 分布函数求导
+
+ ![image-20240612223902093](Probability-and-Statistics.assets/image-20240612223902093.png)
+$$
+F_Y(y) = P(Y\leq y) = P(2X+8\leq y)
+$$
+此时可转化为：
+$$
+F_Y(y) = P(X\leq \frac{y-8}{2}) = F_X(\frac{y-8}{2})
+$$
+我们成功把$Y$的分布函数转化为了$X$​的分布函数
+
+同时求导即可得到概率密度函数
+$$
+f_Y(y) = \frac{ d F_X(\frac{y-8}{2})}{dy} = \frac{1}{2}f_X(\frac{y-8}{2})
+$$
+
+
+
+
+#### 公式
+
+对于概率密度函数为$f(x)$的随机变量$X$
+
+前提条件：
+
+- 若$y=g(x)$关于变量$x$是**单调且可导**
+  - 即：$g'(x) > 0 $或$g'(x) <0 $恒成立
+
+则对于$Y =g(X)$，随机变量$Y$的概率密度函数：
+$$
+f_Y(y) = \begin{cases}
+f_X[h(y)] \times |h'(y)|, \alpha < y < \beta
+\\
+0, otherwise
+\end{cases}
+$$
+其中$x = h(y)$是$y=g(x)$的反函数
+
+- $\alpha = \min\{ g(-\infty), g(+\infty) \}$
+- $\beta = \max\{ g(-\infty), g(+\infty) \}$
+
+
+
+
+
+## 二维随机变量
+
+对于样本空间$S = \{e \}$，随机变量$X=X(e), Y=Y(e)$共同组成二维随机变量$(X,Y)$
+
+![image-20240612230028964](Probability-and-Statistics.assets/image-20240612230028964.png)
+
+### 联合分布函数
+
+$$
+F(x,y) = P( X\leq x,Y\leq y)
+$$
+
+此时$,$表示积事件
+
+- 单调性
+  - 固定一维，另一维单调
+- 有界性：$0 \leq P \leq 1$
+
+### 联合概率密度
+
+$$
+F(x,y) = \int_{-\infty}^x\int_{-\infty}^yf(u,v)dudv
+$$
+
+则$f(x,y)$即为$F(x,y)$的联合概率密度函数
