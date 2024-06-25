@@ -430,7 +430,11 @@ $$
 
 ![image-20240612230028964](Probability-and-Statistics.assets/image-20240612230028964.png)
 
-### 联合分布函数
+
+
+### 联合分布
+
+#### 联合分布函数
 
 $$
 F(x,y) = P( X\leq x,Y\leq y)
@@ -440,12 +444,102 @@ $$
 
 - 单调性
   - 固定一维，另一维单调
-- 有界性：$0 \leq P \leq 1$
+- 有界性：$0 \leq P \leq 1$​
 
-### 联合概率密度
+
+
+对于离散型：使用联合分布律
+
+对于连续型：使用联合概率密度
+
+
+
+#### 联合概率密度
 
 $$
 F(x,y) = \int_{-\infty}^x\int_{-\infty}^yf(u,v)dudv
 $$
 
 则$f(x,y)$即为$F(x,y)$的联合概率密度函数
+
+
+
+### 边缘分布
+
+#### 边缘分布函数
+
+- $F_X(x) = P(X\leq x)$
+- $F_Y(y) = P(Y\leq y)$
+
+已知$F(X,Y)$求边缘分布函数
+
+- $F_X(x) = P(X\leq x) = P(X\leq x, Y<+\infty) = F(x,+\infty) = \lim_{y \to +\infty} F(x,y)$
+- $F_Y(y) = P(Y\leq y) = P(X\leq +\infty, Y<y) = F(+\infty, y) = \lim_{x \to +\infty} F(x,y)$
+
+
+
+#### 边缘分布律
+
+联合分布律按行列求和即可
+
+
+
+#### 边缘概率密度
+
+有联合概率密度：
+$$
+F(x,y) = \int_{-\infty}^x\int_{-\infty}^yf(u,v)dudv
+$$
+关于$X$的**边缘分布函数**可以表示为：
+$$
+F_X(x) = \lim_{y \to +\infty} F(x,y) = \int_{-\infty}^{+\infty}[\int_{-\infty}^{x}f(u,v)du]dv \\
+F_X(x) = \int_{-\infty}^{x}[\int_{-\infty}^{+\infty}f(u,v)dv]du \\
+F_X(x) = \int_{-\infty}^{x} f_X(x) du
+$$
+此时则有：
+$$
+f_X(x) =\int_{-\infty}^{+\infty}f(x,y)dy
+$$
+将$x$看做常数进行积分
+$$
+f_Y(y) =\int_{-\infty}^{+\infty}f(x,y)dx
+$$
+将$y$看做常数进行积分
+
+
+
+### 条件分布
+
+#### 离散型
+
+求$P(X=x_i |Y=y_j)$
+$$
+P(X=x_i |Y=y_j) = \frac{P(X=x_i,Y=y_j)}{P(Y=y_j)}
+$$
+即**联合概率除以边缘概率**
+
+#### 连续型
+
+求$P(X\leq x |Y=y)$
+
+但对于连续型，等于一个值的概率为0，因此需要修正为：
+
+$P(X\leq x |y < Y\leq y + \epsilon)$
+$$
+P = \frac{P(X\leq x ,y < Y\leq y + \epsilon)}{P(y < Y\leq y + \epsilon)} \\
+P = \frac{\int_{-\infty}^{x}[\int_y^{y+\epsilon}f(x,y)dy]dx}{\int_y^{y+\epsilon}f_Y(y)dy}\\
+P = \frac{\int_{-\infty}^{x}\epsilon f(x,y) dx}{\epsilon f_Y(y)} =  \frac{\int_{-\infty}^{x} f(x,y) dx}{f_Y(y)} \\
+P = \int_{-\infty}^{x} \frac{ f(x,y) }{f_Y(y)} dx
+$$
+其中$y$为常数
+
+此时我们就可以把$\frac{ f(x,y) }{f_Y(y)} $看作一个新的概率密度函数
+
+在$Y=y$的条件下$X$的概率密度函数为：
+$$
+f_{X|Y}(x|y) = \frac{ f(x,y) }{f_Y(y)}
+$$
+在$Y=y$的条件下$X$的**条件分布函数**为：
+$$
+F_{X|Y}(x|y) = P(X\leq x|Y=y) = \int_{-\infty}^{x}f_{X|Y}(x|y)  dx
+$$
