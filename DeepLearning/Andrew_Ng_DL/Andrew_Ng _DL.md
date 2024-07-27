@@ -1,4 +1,4 @@
-# 深度学习 - 吴恩达
+# 手推神经网络
 
 > [Bilibili](https://www.bilibili.com/video/BV1FT4y1E74V)
 >
@@ -644,7 +644,4 @@ $$
 
 对于多个样本，我们这里没有必要引入矩阵计算，建议使用reduce-sum进行求解
 
-
-
-## 实操
 

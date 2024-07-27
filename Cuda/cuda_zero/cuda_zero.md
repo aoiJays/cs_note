@@ -237,7 +237,7 @@ code见`code/src/code_2.cu`
 
 ### 连续地址
 
-![image-20240402124057146](/home/aoijays/Desktop/note/Cuda/cuda_zero/cuda_zero.assets/image-20240402124057146.png)
+![image-20240402124057146](./cuda_zero.assets/image-20240402124057146.png)
 
 code见`code/src/code_3.cu`
 
