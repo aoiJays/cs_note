@@ -1,3 +1,5 @@
+
+
 # Langchain入门
 
 [TOC]
@@ -267,6 +269,7 @@ messages = [
 
 ```python
 chatLLM.invoke(messages) # 或者直接 chatLLM(messages)
+# 推荐invoke
 ```
 
 返回内容：
@@ -315,5 +318,184 @@ doc_results = embeddings.embed_documents(["Kurokawa Akane","Kurokawa Akane"])
 print(doc_results)
 
 # 均输出浮点数列表
+```
+
+
+
+## Prompts
+
+### PromptTemplate
+
+> [文档：PromptTemplate](https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html)
+
+```python
+from langchain_community.llms import Tongyi
+from langchain_core.prompts import PromptTemplate
+
+# 方法1：PromptTemplate构造函数
+
+# 模板定义
+template = "一句话介绍一下明日方舟干员{Operators}的身份"
+# 构建组件
+prompt = PromptTemplate(template=template, input_variables=["Operators"])
+# 生成模板
+prompt_text = prompt.format(Operators="缪尔赛斯")
+
+# --------------------------------------
+
+# 方法2：from_template
+template = "一句话介绍一下明日方舟干员{Operators}的身份"
+prompt = PromptTemplate.from_template(template)
+prompt_text = prompt.format(Operators="缪尔赛斯")
+
+# --------------------------------------
+
+
+
+llm = Tongyi( model_name="qwen1.5-1.8b-chat", temperature=0.95, top_p=0.7, max_tokens=100 )
+
+llm(prompt_text)
+```
+
+### FewShotPromptTemplate
+
+> [文档：FewShotPromptTemplate](https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.few_shot.FewShotPromptTemplate.html#)
+>
+> - Zero-shot 是指模型在没有见过任何特定任务的训练数据的情况下进行预测
+> - One-shot 是指模型在仅见过一个训练样本的情况下进行学习和预测
+> - Few-shot 是指模型在见过很少量的训练样本（几个到几十个）的情况下进行学习和预测
+
+```python
+from langchain_core.prompts.few_shot import FewShotPromptTemplate
+
+
+# 样例准备
+# 相当于会组合样例以及模板 成为真正的样例
+examples = [
+    {
+        "Operators": "令", 
+        "description": "令，一位辅助干员"
+    },
+    {
+        "Operators": "斯卡蒂", 
+        "description": "斯卡蒂，一位近卫干员"
+    }, 
+    {
+        "Operators": "缪尔赛斯", 
+        "description": "缪尔赛斯, 一位先锋干员"
+    }
+]
+example_template = """
+明日方舟干员：{Operators}
+描述：{description}\n
+"""
+example_prompt = PromptTemplate.from_template(example_template)
+
+
+few_shot_prompt = FewShotPromptTemplate(
+    examples = examples, 
+    example_prompt = example_prompt, 
+    
+	# 真实提问
+    prefix = "给出每个干员的姓名，描述每一位干员的身份",
+    suffix = "明日方舟干员：{Operators}\n描述：\n",
+    input_variables=["Operators"],
+    example_separator = "\n" # 样例直接隔开
+)
+
+prompt_text = few_shot_prompt.format(Operators="黍")
+print(prompt_text)
+
+'''
+# prompt_text:
+给出每个干员的姓名，描述每一位干员的身份
+
+明日方舟干员：令
+描述：令，一位辅助干员
+
+
+
+明日方舟干员：斯卡蒂
+描述：斯卡蒂，一位近卫干员
+
+
+
+明日方舟干员：缪尔赛斯
+描述：缪尔赛斯, 一位先锋干员
+
+
+明日方舟干员：黍
+描述：
+'''
+print(llm(prompt_text))
+'''
+# 输出
+明日方舟干员：谷粒
+描述：谷粒，一位研究者干员
+
+# 至少格式对了
+'''
+```
+
+
+
+## Chains
+
+### LLMChain
+
+> [对象文档：LLMChain](https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html#langchain.chains.llm.LLMChain)
+
+```python
+from langchain.chains import LLMChain
+# 指定模型 指定prompt
+chain1 = LLMChain(llm=llm, prompt=few_shot_prompt)
+chain1.invoke("黍")
+# {'Operators': '黍', 'text': '明日方舟干员：谷粒\n描述：谷粒，一位研究者干员'}
+```
+
+需要多个参数时：
+
+```python
+# 模板定义
+template = "{a} + {b} = ?"
+# 构建组件
+prompt = PromptTemplate.from_template(template)
+
+chain2 = LLMChain(llm=llm, prompt=prompt)
+chain2.invoke({"a": "100", "b": "200"})
+# {'a': '100', 'b': '200', 'text': '300'}
+```
+
+### SimpleSequentialChain
+
+将上一个chain的输出作为当前chain的输入
+
+```python
+template = "{country}的首都是哪个城市？用一个词回答"
+prompt = PromptTemplate.from_template(template)
+chain1 = LLMChain(llm=llm, prompt=prompt)
+
+template2 = "{city}有哪些景点值得参观？用一句话列举"
+prompt2 = PromptTemplate.from_template(template2)
+chain2 = LLMChain(llm=llm, prompt=prompt2)
+
+# 组装
+from langchain.chains import SimpleSequentialChain
+chains = SimpleSequentialChain(chains=[chain1, chain2], verbose=True)
+# verbose=True，可以看见推理的步骤
+chains.run("中国")
+
+'''
+> Entering new SimpleSequentialChain chain...
+首都：北京。
+故宫、天安门广场、长城、颐和园、鸟巢等。
+> Finished chain.
+'''
+
+'''
+# 真实输出
+'故宫、天安门广场、长城、颐和园、鸟巢等。'
+'''
+
 ```
 
