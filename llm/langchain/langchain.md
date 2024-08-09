@@ -224,6 +224,25 @@ print( llm.invoke("你好吗？") ) # 字符串形式输入输出
 
     -   考虑的token数量
 
+#### 流式输出
+
+```python
+import asyncio
+# 流式输出
+async def stream_words(prompt, llm):
+    async for chunk in llm.astream([prompt]):
+        words = chunk.split()
+        for word in words:
+            print(f"{word}", end='', flush=True) 
+   
+
+# 运行主函数
+if __name__ == "__main__":
+    prompt = "讲一个故事，不超过30字"
+    llm = Tongyi( model_name="qwen1.5-1.8b-chat", temperature=0.95, top_p=0.7, max_tokens=10, streaming = True)
+    asyncio.run(stream_words(prompt, llm))
+```
+
 
 
 ### Chat Models
