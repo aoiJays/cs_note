@@ -499,3 +499,227 @@ chains.run("中国")
 
 ```
 
+
+
+## Agents
+
+预训练的LLM能力有限（数学能力、逻辑、实时信息），需要引入第三方工具进行辅助
+
+>   [Toolkits | 🦜️🔗 LangChain](https://python.langchain.com/v0.2/docs/integrations/toolkits/)
+>
+>   [Tools | 🦜️🔗 LangChain](https://python.langchain.com/v0.2/docs/integrations/tools/)
+
+```python
+!pip install numexpr
+from langchain.agents import load_tools, initialize_agent, AgentType
+
+# 加载第三方工具
+tools = load_tools(["llm-math"], llm=llm)
+# 初始化agent
+agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True)
+
+agent.run("Assume you are 12 years old now, what's your age raised to the 0.43 power?")
+
+'''
+To calculate the amount by which my current age is raised to the power of 0.43, we first need to determine my current age and then multiply it by 0.43.
+My current age:
+Since I am currently 12 years old, my current age is 12.
+To find the power 0.43, we divide the current age by 0.43:
+Power = Current Age / 0.43
+Power = 12 / 0.43
+Power ≈ 30.867294153885714
+Thought: The calculation has been completed successfully.
+Final Answer: My current age raised to the 0.43 power is approximately 30.87.
+
+> Finished chain.
+'''
+```
+
+
+
+## Memory
+
+### ChatMessageHistory
+
+-   记录消息存储记录
+
+```python
+from langchain.memory import ChatMessageHistory
+
+# 记录消息存储记录
+history = ChatMessageHistory()
+
+history.add_user_message("今天开学") # user
+history.add_ai_message("好的，明天见") # ai
+
+history.messages # 查看消息记录
+
+# [HumanMessage(content='今天开学'), AIMessage(content='好的，明天见')]
+```
+
+
+
+### 长期记忆
+
+我们需要把之前的对话存储下来，可以考虑存储成字典形式
+
+```python
+from langchain.memory import ChatMessageHistory
+from langchain.schema import messages_to_dict, messages_from_dict
+
+# 注意messages和message是不一样的，前者是列表，后者是单个消息
+# 这里使用s
+
+
+history = ChatMessageHistory()
+
+history.add_user_message("今天开学") # user
+history.add_ai_message("好的，明天见") # ai
+
+dicts = messages_to_dict(history.messages)
+print(dicts)
+'''
+[{'type': 'human', 'data': {'content': '今天开学', 'additional_kwargs': {}, 'response_metadata': {}, 'type': 'human', 'name': None, 'id': None, 'example': False}}, {'type': 'ai', 'data': {'content': '好的，明天见', 'additional_kwargs': {}, 'response_metadata': {}, 'type': 'ai', 'name': None, 'id': None, 'example': False, 'tool_calls': [], 'invalid_tool_calls': [], 'usage_metadata': None}}]
+
+'''
+new_history = messages_from_dict(dicts)
+print(new_history)
+'''
+[HumanMessage(content='今天开学'), AIMessage(content='好的，明天见')]
+'''
+
+
+```
+
+
+
+### ConversationChains
+
+```python
+from langchain.chains import ConversationChain
+
+# 支持记录的对话chain
+conversation = ConversationChain(llm=llm, verbose=True)
+```
+
+
+
+我们可以看一下template
+
+```python
+'''
+'The following is a friendly conversation between a human and an AI. The AI is talkative and provides lots of specific details from its context. If the AI does not know the answer to a question, it truthfully says it does not know. 
+Current conversation: {history}
+Human: {input}
+AI:
+'''
+```
+
+
+
+每次都会存储之前的历史记录，放入本次的输入，让AI填写新的回复内容
+
+为了防止回复词数过多，稍微修改了一下：
+
+```python
+conversation.prompt.template = '''
+The following is a friendly conversation between a human and an AI. The AI is talkative and provides lots of specific details from its context. If the AI does not know the answer to a question, it truthfully says it does not know.
+Current conversation:
+{history}
+Human: {input}
+AI:
+注意，只允许使用不超过10个字进行简单回答
+'''
+
+response = conversation.predict(input='我姐姐明天要过生日，推荐一束生日花束的种类。')
+response = conversation.predict(input='她喜欢的颜色是粉色的。')
+response = conversation.predict(input='我为什么要买花')
+
+
+conversation.memory.chat_memory.messages
+'''
+[HumanMessage(content='我姐姐明天要过生日，推荐一束生日花束的种类。'),
+ AIMessage(content='"玫瑰、百合、郁金香、康乃馨、太阳花"。'),
+ HumanMessage(content='她喜欢的颜色是粉色的。'),
+ AIMessage(content='粉色康乃馨。'),
+ HumanMessage(content='我为什么要买花'),
+ AIMessage(content='为了庆祝她生日。')]
+'''
+```
+
+
+
+## Indexes
+
+对文档（txt、pdf、md……）进行处理、检索
+
+### TextLoader
+
+```python
+from langchain_community.document_loaders import TextLoader
+
+loader = TextLoader('source.txt')
+txt = loader.load() # 加载文档
+
+print(txt)
+print(len(txt))
+
+# [Document(metadata={'source': 'source.txt'}, page_content='【代号】缪尔赛思\n【性别】女\n【战斗经验】没有战斗经验\n【出身地】未公开\n【生日】11月3日\n【种族】精灵\n【身高】169cm\n【矿石病感染情况】\n参照医学检测报告，确认为非感染者。')]
+# 1
+```
+
+### CharacterTextSplitter
+
+-   常将文本切分成多个段
+-   切分方式
+    -   按字数，简单，但是容易切出没意义的段落
+    -   按特殊字符，例如回车符
+
+```python
+from langchain.text_splitter import CharacterTextSplitter
+text_splitter = CharacterTextSplitter(
+    separator='\n', # 切分符
+    chunk_size=10,  # chunk大小
+    chunk_overlap=0 # 重叠
+)
+
+# 切割成字符串列表
+txt_doc = text_splitter.split_text(txt[0].page_content)
+print(txt_doc)
+
+# 切割成document对象列表
+texts = text_splitter.split_documents(txt)
+print(texts)
+
+'''
+['【代号】缪尔赛思', '【性别】女', '【战斗经验】没有战斗经验', '【出身地】未公开', '【生日】11月3日', '【种族】精灵', '【身高】169cm', '【矿石病感染情况】', '参照医学检测报告，确认为非感染者。']
+
+[Document(metadata={'source': 'source.txt'}, page_content='【代号】缪尔赛思'), Document(metadata={'source': 'source.txt'}, page_content='【性别】女'), Document(metadata={'source': 'source.txt'}, page_content='【战斗经验】没有战斗经验'), Document(metadata={'source': 'source.txt'}, page_content='【出身地】未公开'), Document(metadata={'source': 'source.txt'}, page_content='【生日】11月3日'), Document(metadata={'source': 'source.txt'}, page_content='【种族】精灵'), Document(metadata={'source': 'source.txt'}, page_content='【身高】169cm'), Document(metadata={'source': 'source.txt'}, page_content='【矿石病感染情况】'), Document(metadata={'source': 'source.txt'}, page_content='参照医学检测报告，确认为非感染者。')]
+'''
+```
+
+
+
+### 向量数据库
+
+```python
+from langchain_community.vectorstores import FAISS
+from langchain_community.embeddings import DashScopeEmbeddings
+import os
+
+embeddings = DashScopeEmbeddings(
+    model="text-embedding-v1", dashscope_api_key=os.environ["DASHSCOPE_API_KEY"]
+)
+
+db = FAISS.from_documents(documents, embeddings) # 构建数据库
+retriever = db.as_retriever( # 转换为检索器 返回最相关的k个文档
+    search_kwargs = {
+        'k': 2
+	}
+)
+
+result = retriever.get_relevant_documents("学院共有几次晋级ICPC国际大学生程序设计竞赛全球总决赛，分别是哪几年？")
+result
+
+```
+
