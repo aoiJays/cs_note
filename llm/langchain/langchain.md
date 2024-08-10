@@ -38,7 +38,7 @@ pip install -U openai # 安装openai 包并升级到最新版本
 
 ```bash
 # 用 API-KEY 代替 YOUR_DASHSCOPE_API_KEY
-echo "export DASHSCOPE_API_KEY='YOUR_DASHSCOPE_API_KEY'" >> ~/.bashrc
+echo "export DASHSCOPE_API_KEY='sk-25580ab055e647bc9a63834d9f54358a'" >> ~/.bashrc
 source ~/.bashrc
 echo $DASHSCOPE_API_KEY # 输出成功则完成设置
 ```
