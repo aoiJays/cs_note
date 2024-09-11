@@ -2,3 +2,4 @@ build/
 Dataset/
 model/
 .vscode
+data/
